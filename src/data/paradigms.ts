@@ -1,13 +1,16 @@
-import { NounCase, WordNumber } from '../types';
+import { NounCase } from '../types';
 
-type ParadigmPattern = Record<WordNumber, Record<NounCase, string>>;
+type ParadigmPattern = {
+  singular: Record<NounCase, string>,
+  plural: Record<NounCase, string>,
+};
 export type Paradigm = {
   example: string,
   pattern: ParadigmPattern,
   ending: NounEnding,
 };
-export type NounEnding = 'ος' | 'η' | 'α' | 'ον';
-export type ParadigmName = 'ος-ου' | 'η-ης' | 'α-ης' | 'α-ας' | 'ον-ου';
+export type NounEnding = 'ος' | 'η' | 'α' | 'ον' | 'ης' | 'ας';
+export type ParadigmName = 'ος-ου' | 'η-ης' | 'α-ης' | 'α-ας' | 'ον-ου' | 'ης-ου' | 'ας-ου';
 
 const paradigms: Record<ParadigmName, Paradigm> = {
   'ος-ου': {
@@ -99,6 +102,42 @@ const paradigms: Record<ParadigmName, Paradigm> = {
       },
     },
     ending: 'ον',
+  },
+  'ης-ου': {
+    example: 'μαθητης',
+    pattern: {
+      singular: {
+        n: 'ης',
+        g: 'ου',
+        d: 'ῃ',
+        a: 'ην',
+      },
+      plural: {
+        n: 'αι',
+        g: 'ων',
+        d: 'αις',
+        a: 'ας',
+      },
+    },
+    ending: 'ης',
+  },
+  'ας-ου': {
+    example: 'Ἀνδρεας',
+    pattern: {
+      singular: {
+        n: 'ας',
+        g: 'ου',
+        d: 'ᾳ',
+        a: 'αν',
+      },
+      plural: {
+        n: 'αι',
+        g: 'ων',
+        d: 'αις',
+        a: 'ας',
+      },
+    },
+    ending: 'ας',
   },
 };
 

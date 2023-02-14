@@ -1,7 +1,7 @@
 import { ReactNode, useMemo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import MenuPage from './Menu';
-import NounsPage from './Menu';
+import NounsPage from './Nouns';
 
 export type PageId = (
   | 'menu'

@@ -29,13 +29,15 @@ export function getParadigm(noun: string) {
 }
 
 export function getEnding(noun: string) {
-  const endings: NounEnding[] = [
-    'ος',
-    'η',
-    'α',
-    'ον',
-  ];
-  for (const ending of endings) {
+  const endings: Record<NounEnding, true> = {
+    'ος': true,
+    'η': true,
+    'α': true,
+    'ον': true,
+    'ης': true,
+    'ας': true,
+  };
+  for (const ending of Object.keys(endings)) {
     if (noun.endsWith(ending)) {
       return ending;
     }

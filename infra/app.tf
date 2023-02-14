@@ -1,11 +1,10 @@
 locals {
-  bucket_name = "bgf-app-${var.environment}"
+  bucket_name = "greek-app-${var.environment}"
   compress    = true
   origin_id   = "app_s3_origin"
-  domain      = "bgf.campusbiblestudy.org"
 
   min_ttl     = 0
-  default_ttl = 0
+  default_ttl = 600
   max_ttl     = 600
 
   allowed_methods = ["GET", "HEAD", "OPTIONS"]

@@ -5,6 +5,7 @@ type NounData = {
   word: string,
   genitive: string,
   article: Article,
+  singular?: boolean,
 };
 
 const nouns: NounData[] = [
@@ -15,26 +16,8 @@ const nouns: NounData[] = [
     article: 'ὁ',
   },
   {
-    lexical: 'ἀνθρωπος, ου, ὁ',
-    word: 'ανθρωπος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'Ζεβεδαιος, ου, ὁ',
-    word: 'Ζεβεδαιος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
     lexical: 'θεος, ου, ὁ',
     word: 'θεος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'θρονος, ου, ὁ',
-    word: 'θρονος',
     genitive: 'ου',
     article: 'ὁ',
   },
@@ -51,86 +34,14 @@ const nouns: NounData[] = [
     article: 'ὁ',
   },
   {
-    lexical: 'Πετρος, ου, ὁ',
-    word: 'Πετρος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'Πιλατος, ου, ὁ',
-    word: 'Πιλατος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
     lexical: 'φοβος, ου, ὁ',
     word: 'φοβος',
     genitive: 'ου',
     article: 'ὁ',
   },
   {
-    lexical: 'Χριστος, ου, ὁ',
-    word: 'Χριστος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'χρονος, ου, ὁ',
-    word: 'χρονος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'ἀδελφος, ου, ὁ',
-    word: 'ἀδελφος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'διδασκαλος, ου, ὁ',
-    word: 'διδασκαλος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
     lexical: 'ἡλιος, ου, ὁ',
     word: 'ἡλιος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'ἰακωβος, ου, ὁ',
-    word: 'ἰακωβος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'κυριος, ου, ὁ',
-    word: 'κυριος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'λιθος, ου, ὁ',
-    word: 'λιθος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'οἰκος, ου, ὁ',
-    word: 'οἰκος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'οὐρανος, ου, ὁ',
-    word: 'οὐρανος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'τοπος, ου, ὁ',
-    word: 'τοπος',
     genitive: 'ου',
     article: 'ὁ',
   },
@@ -145,11 +56,12 @@ const nouns: NounData[] = [
     word: 'Γαλιλαια',
     genitive: 'ας',
     article: 'ἡ',
+    singular: true,
   },
   {
     lexical: 'γη, γης, ἡ',
     word: 'γη',
-    genitive: 'γης',
+    genitive: 'ης',
     article: 'ἡ',
   },
   {
@@ -174,12 +86,6 @@ const nouns: NounData[] = [
     lexical: 'θαλασσα, ης, ἡ',
     word: 'θαλασσα',
     genitive: 'ης',
-    article: 'ἡ',
-  },
-  {
-    lexical: 'οἰκος, ας, ἡ',
-    word: 'οἰκος',
-    genitive: 'ας',
     article: 'ἡ',
   },
   {
@@ -277,6 +183,13 @@ const nouns: NounData[] = [
     word: 'Ἀνδρεας',
     genitive: 'ου',
     article: 'ὁ',
+    singular: true,
+  },
+  {
+    lexical: 'ἐρημος, ου, ἡ',
+    word: 'ἐρημος',
+    genitive: 'ου',
+    article: 'ἡ',
   },
   {
     lexical: 'ἐρημος, ου, ἡ',
@@ -289,6 +202,7 @@ const nouns: NounData[] = [
     word: 'Ἡσα̈ιας',
     genitive: 'ου',
     article: 'ὁ',
+    singular: true,
   },
   {
     lexical: 'θανατος, ου, ὁ',
@@ -297,14 +211,8 @@ const nouns: NounData[] = [
     article: 'ὁ',
   },
   {
-    lexical: 'οἰκος, ου, ὁ',
-    word: 'οἰκος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'οἰκος, ου, ὁ',
-    word: 'οἰκος',
+    lexical: 'μαθητης, ου, ὁ',
+    word: 'μαθητης',
     genitive: 'ου',
     article: 'ὁ',
   },
@@ -319,6 +227,18 @@ const nouns: NounData[] = [
     word: 'ὁδος',
     genitive: 'ου',
     article: 'ἡ',
+  },
+  {
+    lexical: 'ὁδος, ου, ἡ',
+    word: 'ὁδος',
+    genitive: 'ου',
+    article: 'ἡ',
+  },
+  {
+    lexical: 'προφητης, ου, ὁ',
+    word: 'προφητης',
+    genitive: 'ου',
+    article: 'ὁ',
   },
   {
     lexical: 'προφητης, ου, ὁ',
@@ -375,28 +295,16 @@ const nouns: NounData[] = [
     article: 'ἡ',
   },
   {
-    lexical: 'νομος, ου, ὁ',
-    word: 'νομος',
+    lexical: 'οἰκος, ου, ὁ',
+    word: 'οἰκος',
     genitive: 'ου',
     article: 'ὁ',
   },
   {
-    lexical: 'οἰκος, ας, ἡ',
-    word: 'οἰκος',
+    lexical: 'οἰκια, ας, ἡ',
+    word: 'οἰκια',
     genitive: 'ας',
     article: 'ἡ',
-  },
-  {
-    lexical: 'ὀχλος, ου, ὁ',
-    word: 'ὀχλος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
-    lexical: 'ποταμος, ου, ὁ',
-    word: 'ποταμος',
-    genitive: 'ου',
-    article: 'ὁ',
   },
   {
     lexical: 'υἱος, ου, ὁ',
@@ -429,22 +337,10 @@ const nouns: NounData[] = [
     article: 'ἡ',
   },
   {
-    lexical: 'Παυλος, ου, ὁ',
-    word: 'Παυλος',
-    genitive: 'ου',
-    article: 'ὁ',
-  },
-  {
     lexical: 'ἀγαπη, ης, ἡ',
     word: 'ἀγαπη',
     genitive: 'ης',
     article: 'ἡ',
-  },
-  {
-    lexical: 'δουλος, ου, ὁ',
-    word: 'δουλος',
-    genitive: 'ου',
-    article: 'ὁ',
   },
 ];
 

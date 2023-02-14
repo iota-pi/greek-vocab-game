@@ -1,5 +1,5 @@
 import Fastify, { FastifyInstance } from 'fastify';
-import cors from 'fastify-cors';
+import cors from '@fastify/cors';
 import routes from './routes';
 
 
