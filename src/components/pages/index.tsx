@@ -1,29 +1,32 @@
 import { ReactNode, useMemo } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { DataIcon, MuiIconType } from '../Icons';
-import DataPage from './Menu';
+import MenuPage from './Menu';
+import NounsPage from './Menu';
 
 export type PageId = (
-  'data' |
-  'groups' |
-  'finish'
+  | 'menu'
+  | 'nouns'
 );
 
 export interface Page {
   id: PageId,
   name: string,
-  icon: MuiIconType,
   path: string,
   page: ReactNode,
 }
 
 export const pages: Page[] = [
   {
-    id: 'data',
+    id: 'menu',
     path: '/',
-    name: 'Data',
-    icon: DataIcon,
-    page: <DataPage />,
+    name: 'Menu',
+    page: <MenuPage />,
+  },
+  {
+    id: 'nouns',
+    path: '/',
+    name: 'Nouns',
+    page: <NounsPage />,
   },
 ];
 
