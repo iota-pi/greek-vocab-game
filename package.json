@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "tsc && vite build",
-    "upload": "aws s3 cp build/ s3://greek-app-production/ --recursive --acl public-read",
+    "upload": "aws s3 cp build/ s3://greek-parsing-app-production/ --recursive --acl public-read",
     "deploy:app": "yarn build && yarn upload",
     "build:lambda": "esbuild lambda/index.ts --outfile=lambda/build/lambda.js --bundle --minify --platform=node --target=node14 --external:aws-sdk --external:canvas",
     "bundle:lambda": "cd lambda/build && 7z a -tzip lambda.zip lambda.js",

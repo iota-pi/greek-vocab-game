@@ -1,5 +1,5 @@
 locals {
-  bucket_name = "greek-app-${var.environment}"
+  bucket_name = "greek-parsing-app-${var.environment}"
   compress    = true
   origin_id   = "app_s3_origin"
 
@@ -96,16 +96,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = data.aws_acm_certificate.root_cert.arn
+    acm_certificate_arn = aws_acm_certificate.root_cert.arn
     ssl_support_method  = "sni-only"
   }
 
   tags = local.standard_tags
-}
-
-data "aws_acm_certificate" "root_cert" {
-  domain   = local.domain
-  provider = aws.us_east_1
 }
 
 output "app_bucket" {

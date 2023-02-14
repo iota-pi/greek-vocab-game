@@ -18,7 +18,7 @@ resource "aws_lambda_function" "api" {
   timeout     = 120
 
   s3_bucket        = var.code_bucket
-  s3_key           = "greek-game/lambda.zip"
+  s3_key           = "greek/lambda.zip"
   source_code_hash = filebase64sha256("../lambda/build/lambda.zip")
 
   environment {
@@ -99,7 +99,7 @@ resource "aws_iam_role_policy_attachment" "broadcaster_policy_attach" {
 resource "aws_dynamodb_table" "greek_scores" {
   name         = "GreekScores_${var.environment}"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "session"
+  hash_key     = "category"
 
   attribute {
     name = "category"
