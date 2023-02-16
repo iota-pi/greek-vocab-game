@@ -86,15 +86,25 @@ function MenuPage() {
   const getNewWord = useCallback(() => setCurrentWord(pickWord()), []);
 
   const checkAnswer = useCallback(
-    (nounCase, number, gender) => {
+    (nounCase: NounCase, number: WordNumber, gender: Gender) => {
       let correct = false;
+      const declinedGuess = declineNoun({
+        noun: currentWord.lexical,
+        nounCase,
+        number,
+      });
       if (
         gender === currentWord.gender
-        && declineNoun({
-          noun: currentWord.lexical,
-          nounCase,
-          number,
-        }) === currentWord.word
+        && declinedGuess === currentWord.word
+      ) {
+        correct = true;
+      }
+
+      // Handle special ambiguous cases
+      if (
+        currentWord.word === 'οἰκων'
+        && declinedGuess === currentWord.word
+        && gender !== 'neuter'
       ) {
         correct = true;
       }
