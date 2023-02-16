@@ -1,4 +1,8 @@
-import { Gender, NounCase, WordNumber } from "./types";
+import { Gender, NounCase, WordNumber } from './types';
+
+export const API_ENDPOINT = (
+  'https://s46ipfbb5e.execute-api.ap-southeast-2.amazonaws.com/production'
+);
 
 export function capitalise(value: string) {
   if (value.toLowerCase() !== value && value.toUpperCase() !== value) {
@@ -49,4 +53,18 @@ export function getGenderName(gender: Gender) {
     neuter: 'Neuter',
   };
   return mapping[gender];
+}
+
+export function splitTime(time: number) {
+  const ms = time % 1000;
+  const s = Math.floor(time / 1000) % 60;
+  const m = Math.floor(time / 1000 / 60);
+  return { m, ms, s };
+}
+
+export function formatTime(time: { m: number, ms: number, s: number }) {
+  const m = time.m.toString().padStart(2, '0');
+  const s = time.s.toString().padStart(2, '0');
+  const ms = Math.floor(time.ms / 10).toString().padStart(2, '0');
+  return `${m}:${s}:${ms}`;
 }

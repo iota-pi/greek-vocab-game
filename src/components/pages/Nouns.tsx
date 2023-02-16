@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Fragment, useCallback, useRef, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import { default as CheckIcon } from '@mui/icons-material/Check';
 import { default as CrossIcon } from '@mui/icons-material/Close';
 import nouns from '../../data/nouns';
@@ -20,6 +20,7 @@ import { declineNoun, getGender } from '../../decliner';
 import type { Gender, NounCase, WordNumber } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
 import Timer from '../Timer';
+import HighScores from '../../HighScores';
 
 const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
@@ -81,8 +82,6 @@ function MenuPage() {
   const [report, setReport] = useState<Report[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
-
-  const usernameRef = useRef();
 
   const getNewWord = useCallback(() => setCurrentWord(pickWord()), []);
 
@@ -301,17 +300,13 @@ function MenuPage() {
                         </ListItem>
                       ))}
                     </List>
-
-                    <TextField
-                      inputRef={usernameRef}
-                      label="Name"
-                    />
-
-                    <Button>
-                      Submit Score
-                    </Button>
                   </>
                 )}
+
+                <HighScores
+                  category="nouns"
+                  canSubmit={report.length > 0}
+                />
               </Stack>
             </DialogContent>
           </Dialog>
