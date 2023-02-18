@@ -2,10 +2,14 @@ import {
   Button,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   TextField,
+  Typography,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { HighScore } from '../lambda/api/types';
 import { GameCategory } from './types';
 import { API_ENDPOINT, formatTime, splitTime } from './util';
@@ -14,54 +18,107 @@ function HighScores(
   {
     category,
     canSubmit,
+    score,
+    time,
+    total,
   }: {
     category: GameCategory,
     canSubmit?: boolean,
+    score: number,
+    time: number,
+    total: number,
   },
 ) {
+  const dispatch = useDispatch();
   const [highScores, setHighScores] = useState<HighScore[]>([]);
-  const usernameRef = useRef();
+  const [username, setUsername] = useState('');
+
+  const handleChangeUsername = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setUsername(event.target.value);
+    },
+    [],
+  );
+  const usernameError = (
+    (!username || /^[a-zA-Z0-9_]+$/.test(username))
+      ? ''
+      : 'Please only user letters, numbers, or underscores'
+  );
 
   useEffect(
     () => {
-      fetch(
+      axios.get(
         `${API_ENDPOINT}/scores/${category}`,
-        { mode: 'no-cors' },
       ).then(result => {
-        console.log(result);
-        // setHighScores();
+        if (Array.isArray(result.data.scores)) {
+          setHighScores(result.data.scores);
+        }
       });
     },
-    [],
+    [category],
+  );
+
+  const handleSubmit = useCallback(
+    () => {
+      dispatch
+
+      axios.put(
+        `${API_ENDPOINT}/scores/${category}/${username}`,
+        { score, total, time },
+      ).then(result => {
+        if (Array.isArray(result.data.scores)) {
+          setHighScores(result.data.scores);
+        }
+      });
+    },
+    [category, score, total, time, username],
   );
 
   return (
     <>
-      <List dense>
+      {canSubmit && (
+        <>
+          <TextField
+            value={username}
+            onChange={handleChangeUsername}
+            error={!!usernameError}
+            helperText={usernameError}
+            label="Name"
+          />
+
+          <Button
+            disabled={!!usernameError || !username}
+            onClick={handleSubmit}
+            variant="outlined"
+          >
+            Submit Score
+          </Button>
+        </>
+      )}
+
+      <Typography variant="h5" fontWeight={400} pt={2}>
+        High scores
+      </Typography>
+
+      <List disablePadding>
         {highScores.map(({ name, score, total, time }, i) => (
-          <ListItem key={`highScore-${name}`}>
+          <ListItem key={`highScore-${name}`} sx={{ py: 0.5 }}>
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <Typography variant="h5" color="text.primary">
+                {i + 1}.
+              </Typography>
+            </ListItemIcon>
+
             <ListItemText
               primary={name}
               secondary={(
                 `${score} / ${total} — ${formatTime(splitTime(time))}`
               )}
+              primaryTypographyProps={{ fontWeight: 500 }}
             />
           </ListItem>
         ))}
       </List>
-
-      {canSubmit && (
-        <>
-          <TextField
-            inputRef={usernameRef}
-            label="Name"
-          />
-
-          <Button>
-            Submit Score
-          </Button>
-        </>
-      )}
     </>
   );
 }

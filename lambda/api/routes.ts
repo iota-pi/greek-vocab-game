@@ -1,9 +1,16 @@
-import { FastifyPluginCallback } from 'fastify';
+import type { AWSError } from 'aws-sdk';
+import type { FastifyPluginCallback } from 'fastify';
 import ddb from '../ddb';
-import { HighScore } from './types';
+import type { HighScore } from './types';
+import type { GameCategory } from '../../src/types';
 
 const TableName = process.env.SCORES_TABLE_NAME!;
-const MAX_RESULTS = 20;
+const MAX_RESULTS = 10;
+
+const checkCategory = (category: string) => {
+  const categories: GameCategory[] = ['nouns'];
+  return (categories as string[]).includes(category);
+}
 
 const routes: FastifyPluginCallback = (fastify, opts, next) => {
   fastify.get('/', async () => ({ ping: 'pong' }));
@@ -18,16 +25,16 @@ const routes: FastifyPluginCallback = (fastify, opts, next) => {
       }).promise();
       const item = result.Item;
       if (!item) {
+        console.info('Item not found, returning empty scores');
         return { success: true, scores: [] };
       }
 
-      const scores: [string, HighScore][] = Object.entries(item.scores);
+      const scores: HighScore[] = Object.values(item.scores);
       scores.sort(
-        (a, b) => (
-          (b[1].score - a[1].score)
-          || (a[1].time - b[1].time)
-        ),
+        (a, b) => ((b.score - a.score) || (a.time - b.time)),
       );
+
+      console.info(scores);
 
       return {
         success: true,
@@ -42,45 +49,68 @@ const routes: FastifyPluginCallback = (fastify, opts, next) => {
 
   fastify.put('/scores/:category/:username', async (request, reply) => {
     const { category, username } = request.params as { category: string, username: string };
-    const { score, time } = request.body as HighScore;
+    const { score, time, total } = request.body as Omit<HighScore, 'name'>;
 
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    if (!/^[a-zA-Z0-9_]+$/.test(username) || !checkCategory(category)) {
       reply.code(400);
       return { success: false };
     }
 
+    await ddb.put({
+      TableName,
+      Item: {
+        category,
+        scores: {},
+      },
+      ConditionExpression: 'attribute_not_exists(scores)',
+    }).promise().catch(error => {
+      if ((error as AWSError).code !== 'ConditionalCheckFailedException') {
+        throw error;
+      }
+    });
+
+    console.info('Adding score', { score, time, total, username });
+
     try {
-      const result = await ddb.update({
+      const item = await ddb.update({
         TableName,
         Key: { category },
         UpdateExpression: (
           'SET scores.#username = :fullScore'
         ),
         ConditionExpression: (
-          'scores.#username.score < :score OR '
-          + '(scores.#username.score = :score AND scores.#username.time > :time)'
+          'attribute_not_exists(scores.#username) OR '
+          + 'scores.#username.score < :score OR '
+          + '(scores.#username.score = :score AND scores.#username.#time > :time)'
         ),
         ExpressionAttributeNames: {
           '#username': username,
+          '#time': 'time',
         },
         ExpressionAttributeValues: {
-          ':fullScore': { score, time },
+          ':fullScore': { score, time, total, name: username },
           ':score': score,
           ':time': time,
         },
         ReturnValues: 'ALL_NEW',
-      }).promise();
-      const item = result.Attributes;
+      }).promise().then(result => {
+        return result.Attributes
+      }).catch(error => {
+        if ((error as AWSError).code !== 'ConditionalCheckFailedException') {
+          throw error;
+        }
+        return ddb.get({
+          TableName,
+          Key: { category },
+        }).promise().then(result => result.Item);
+      });
       if (!item) {
         return { success: true, scores: [] };
       }
 
-      const scores: [string, HighScore][] = Object.entries(item.scores);
+      const scores: HighScore[] = Object.values(item.scores);
       scores.sort(
-        (a, b) => (
-          (b[1].score - a[1].score)
-          || (a[1].time - b[1].time)
-        ),
+        (a, b) => ((b.score - a.score) || (a.time - b.time)),
       );
 
       return {

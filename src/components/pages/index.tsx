@@ -24,7 +24,7 @@ export const pages: Page[] = [
   },
   {
     id: 'nouns',
-    path: '/',
+    path: '/nouns/',
     name: 'Nouns',
     page: <NounsPage />,
   },

@@ -27,11 +27,11 @@ resource "aws_lambda_function" "api" {
     }
   }
 
-  role = aws_iam_role.broadcaster_role.arn
+  role = aws_iam_role.api_role.arn
   tags = local.standard_tags
 }
 
-resource "aws_iam_role" "broadcaster_role" {
+resource "aws_iam_role" "api_role" {
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -49,7 +49,7 @@ resource "aws_iam_role" "broadcaster_role" {
 EOF
 }
 
-resource "aws_iam_policy" "broadcaster_policy" {
+resource "aws_iam_policy" "api_policy" {
   description = "Lambda policy to allow logging"
 
   policy = <<EOF
@@ -89,9 +89,9 @@ resource "aws_iam_policy" "broadcaster_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "broadcaster_policy_attach" {
-  role       = aws_iam_role.broadcaster_role.name
-  policy_arn = aws_iam_policy.broadcaster_policy.arn
+resource "aws_iam_role_policy_attachment" "api_policy_attach" {
+  role       = aws_iam_role.api_role.name
+  policy_arn = aws_iam_policy.api_policy.arn
 }
 
 

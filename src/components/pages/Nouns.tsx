@@ -9,18 +9,20 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
-import { Fragment, useCallback, useState } from 'react';
 import { default as CheckIcon } from '@mui/icons-material/Check';
+import { default as BackIcon } from '@mui/icons-material/ChevronLeft';
 import { default as CrossIcon } from '@mui/icons-material/Close';
+import { Fragment, useCallback, useState } from 'react';
 import nouns from '../../data/nouns';
 import { declineNoun, getGender } from '../../decliner';
 import type { Gender, NounCase, WordNumber } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
 import Timer from '../Timer';
 import HighScores from '../../HighScores';
+import { useHistory } from 'react-router';
+import { getPage, PageId } from '.';
 
 const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
@@ -29,6 +31,7 @@ const GENDERS: Gender[] = ['masculine', 'feminine', 'neuter'];
 const ROW_WIDTH = 150;
 
 const NUM_QUESTIONS = 20;
+const DEFAULT_TIME = 1000 * 60 * 60;
 
 type Parsing = {
   nounCase: NounCase,
@@ -82,6 +85,15 @@ function MenuPage() {
   const [report, setReport] = useState<Report[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
+  const history = useHistory();
+
+  const goTo = useCallback(
+    (pageId: PageId) => {
+      const page = getPage(pageId);
+      history.push(page.path);
+    },
+    [history],
+  );
 
   const getNewWord = useCallback(() => setCurrentWord(pickWord()), []);
 
@@ -316,7 +328,31 @@ function MenuPage() {
                 <HighScores
                   category="nouns"
                   canSubmit={report.length > 0}
+                  score={score}
+                  time={(
+                    startTime && endTime
+                      ? endTime.getTime() - startTime.getTime()
+                      : DEFAULT_TIME
+                  )}
+                  total={total}
                 />
+
+                {report.length > 0 && (
+                  <Button
+                    variant="outlined"
+                    onClick={handleStart}
+                  >
+                    Play again
+                  </Button>
+                )}
+
+                <Button
+                  size="large"
+                  onClick={() => goTo('menu')}
+                  startIcon={<BackIcon />}
+                >
+                  Change game
+                </Button>
               </Stack>
             </DialogContent>
           </Dialog>

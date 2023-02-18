@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Stack,
+  Typography,
 } from '@mui/material';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router';
@@ -20,14 +21,26 @@ function MenuPage() {
   );
 
   return (
-    <Box padding={2}>
-      <Stack spacing={2}>
+    <Box
+      padding={2}
+      justifyContent="center"
+      display="flex"
+    >
+      <Stack spacing={4} maxWidth={400}>
+        <Typography
+          variant="h2"
+          textAlign="center"
+          pt={4}
+        >
+          Select game
+        </Typography>
+
         <Button
           variant='contained'
           size='large'
           onClick={() => goTo('nouns')}
         >
-          Nouns
+          Noun parsing
         </Button>
       </Stack>
     </Box>
