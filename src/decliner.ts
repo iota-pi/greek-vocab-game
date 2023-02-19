@@ -30,12 +30,12 @@ export function getParadigm(noun: string) {
 
 export function getEnding(noun: string) {
   const endings: Record<NounEnding, true> = {
-    'ος': true,
-    'η': true,
-    'α': true,
-    'ον': true,
-    'ης': true,
-    'ας': true,
+    ος: true,
+    η: true,
+    α: true,
+    ον: true,
+    ης: true,
+    ας: true,
   };
   for (const ending of Object.keys(endings)) {
     if (noun.endsWith(ending)) {
@@ -52,7 +52,7 @@ export function getGender(noun: string) {
     ὁ: 'masculine',
     το: 'neuter',
   };
-  return mapping[nounData.article]
+  return mapping[nounData.article];
 }
 
 export function getNounData(noun: string) {

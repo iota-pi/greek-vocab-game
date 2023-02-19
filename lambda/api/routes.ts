@@ -1,6 +1,6 @@
 import type { AWSError } from 'aws-sdk';
 import type { FastifyPluginCallback } from 'fastify';
-import ddb from '../ddb';
+import { ddb } from '../ddb';
 import type { HighScore } from './types';
 import type { GameCategory } from '../../src/types';
 
@@ -10,7 +10,7 @@ const MAX_RESULTS = 10;
 const checkCategory = (category: string) => {
   const categories: GameCategory[] = ['nouns'];
   return (categories as string[]).includes(category);
-}
+};
 
 const routes: FastifyPluginCallback = (fastify, opts, next) => {
   fastify.get('/', async () => ({ ping: 'pong' }));
@@ -93,9 +93,9 @@ const routes: FastifyPluginCallback = (fastify, opts, next) => {
           ':time': time,
         },
         ReturnValues: 'ALL_NEW',
-      }).promise().then(result => {
-        return result.Attributes
-      }).catch(error => {
+      }).promise().then(
+        result => result.Attributes,
+      ).catch(error => {
         if ((error as AWSError).code !== 'ConditionalCheckFailedException') {
           throw error;
         }
@@ -125,6 +125,6 @@ const routes: FastifyPluginCallback = (fastify, opts, next) => {
   });
 
   next();
-}
+};
 
 export default routes;

@@ -13,17 +13,17 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { default as CheckIcon } from '@mui/icons-material/Check';
-import { default as BackIcon } from '@mui/icons-material/ChevronLeft';
-import { default as CrossIcon } from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import BackIcon from '@mui/icons-material/ChevronLeft';
+import CrossIcon from '@mui/icons-material/Close';
 import { Fragment, useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import nouns from '../../data/nouns';
 import { declineNoun, getGender } from '../../decliner';
 import type { Gender, NounCase, WordNumber } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
 import Timer from '../Timer';
 import HighScores from '../../HighScores';
-import { useHistory } from 'react-router';
 import { getPage, PageId } from '.';
 
 const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
@@ -42,7 +42,7 @@ type Parsing = {
   nounCase: NounCase,
   gender: Gender,
   number: WordNumber,
-}
+};
 
 type WordWithParsing = Parsing & {
   word: string,
@@ -54,7 +54,7 @@ type Report = {
   correct: boolean,
   expected: Parsing,
   given: Parsing,
-}
+};
 
 function pickWord(): WordWithParsing {
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
@@ -299,7 +299,7 @@ function MenuPage() {
           </>
         ) : (
           <Dialog
-            open={true}
+            open
           >
             <DialogContent>
               <Stack spacing={2}>
@@ -340,6 +340,7 @@ function MenuPage() {
 
                     <List dense>
                       {report.map(({ correct, given, expected, word }, i) => (
+                        // eslint-disable-next-line react/no-array-index-key
                         <ListItem key={`reportItem-${i}`}>
                           <ListItemIcon>
                             {(

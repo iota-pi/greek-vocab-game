@@ -22,5 +22,5 @@ describe('declineNoun', () => {
       number,
     });
     expect(result).toEqual(expected);
-  })
+  });
 });

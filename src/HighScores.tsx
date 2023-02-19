@@ -20,9 +20,9 @@ function HighScores(
   {
     category,
     canSubmit,
-    score,
-    time,
-    total,
+    score: newScore,
+    time: newTime,
+    total: newTotal,
   }: {
     category: GameCategory,
     canSubmit?: boolean,
@@ -67,14 +67,14 @@ function HighScores(
 
       axios.put(
         `${API_ENDPOINT}/scores/${category}/${username}`,
-        { score, total, time },
+        { score: newScore, total: newTotal, time: newTime },
       ).then(result => {
         if (Array.isArray(result.data.scores)) {
           setHighScores(result.data.scores);
         }
       });
     },
-    [category, dispatch, score, total, time, username],
+    [category, dispatch, newScore, newTotal, newTime, username],
   );
 
   return (

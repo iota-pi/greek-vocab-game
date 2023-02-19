@@ -5,7 +5,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useCallback } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { getPage, PageId } from '.';
 
 
@@ -36,8 +36,8 @@ function MenuPage() {
         </Typography>
 
         <Button
-          variant='contained'
-          size='large'
+          variant="contained"
+          size="large"
           onClick={() => goTo('nouns')}
         >
           Noun parsing
