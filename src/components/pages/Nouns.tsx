@@ -167,41 +167,56 @@ function MenuPage() {
 
   return (
     <Box padding={2}>
-      <Stack spacing={2}>
-        <Button
-          variant="outlined"
-          onClick={handleRestart}
+      <Stack alignItems="center">
+
+        <Box
+          display="flex"
+          alignItems="center"
+          width="100%"
         >
-          Restart
-        </Button>
+          <Box flex={1}>
+            Score: {score} / {total} ({NUM_QUESTIONS - total} remaining)
+          </Box>
 
-        <div>
-          <div>
-            Score: {score} / {total}
-          </div>
-
-          <div>
+          <Box
+            display="flex"
+            flex={1}
+            justifyContent="center"
+          >
             {startTime && (
               <span>
                 Time: <Timer startTime={startTime} endTime={endTime} />
               </span>
             )}
-          </div>
+          </Box>
 
-          <div>
-            Remaining: {NUM_QUESTIONS - total}
-          </div>
-        </div>
+          <Box
+            display="flex"
+            flex={1}
+            justifyContent="flex-end"
+          >
+            <Button
+              onClick={handleRestart}
+              variant="outlined"
+            >
+              Restart
+            </Button>
+          </Box>
+        </Box>
 
         <Divider />
 
         {gameActive ? (
           <>
-            <Typography variant="h1">
+            <Typography
+              variant="h2"
+              textAlign="center"
+              py={2}
+            >
               {currentWord.word}
             </Typography>
 
-            <Stack spacing={2}>
+            <Stack spacing={2} pt={2}>
               <Stack direction="row" spacing={2}>
                 <Box minWidth={ROW_WIDTH} />
 
