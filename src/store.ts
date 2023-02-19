@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { combineReducers, type PreloadedState } from 'redux';
-import people from './state/people';
+import ui from './state/ui';
 
 const rootReducer = combineReducers({
-  people,
+  ui,
 });
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {

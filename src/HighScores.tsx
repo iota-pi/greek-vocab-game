@@ -11,6 +11,8 @@ import axios from 'axios';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { HighScore } from '../lambda/api/types';
+import { setUsername } from './state/ui';
+import { useAppSelector } from './store';
 import { GameCategory } from './types';
 import { API_ENDPOINT, formatTime, splitTime } from './util';
 
@@ -31,11 +33,12 @@ function HighScores(
 ) {
   const dispatch = useDispatch();
   const [highScores, setHighScores] = useState<HighScore[]>([]);
-  const [username, setUsername] = useState('');
+  const savedUsername = useAppSelector(state => state.ui.username);
+  const [username, setLocalUsername] = useState(savedUsername);
 
   const handleChangeUsername = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      setUsername(event.target.value);
+      setLocalUsername(event.target.value);
     },
     [],
   );
@@ -60,7 +63,7 @@ function HighScores(
 
   const handleSubmit = useCallback(
     () => {
-      dispatch
+      dispatch(setUsername(username));
 
       axios.put(
         `${API_ENDPOINT}/scores/${category}/${username}`,
@@ -71,7 +74,7 @@ function HighScores(
         }
       });
     },
-    [category, score, total, time, username],
+    [category, dispatch, score, total, time, username],
   );
 
   return (

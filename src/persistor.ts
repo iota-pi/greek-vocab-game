@@ -1,5 +1,6 @@
 import { batch } from 'react-redux';
 import { Unsubscribe } from 'redux';
+import { setUsername } from './state/ui';
 import store from './store';
 
 const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
@@ -10,10 +11,10 @@ export interface PersistStateItem<T> {
 }
 
 export interface PersistState {
-  password: PersistStateItem<string>,
+  username: PersistStateItem<string>,
 }
 const ALL_KEYS_OBJECT: Record<keyof PersistState, true> = {
-  password: true,
+  username: true,
 };
 const ALL_KEYS = Object.keys(ALL_KEYS_OBJECT) as (keyof PersistState)[];
 
@@ -46,8 +47,8 @@ class PersistManager {
     const state = store.getState();
     const ttl = this.getTTL();
     return {
-      password: {
-        value: '',  // TODO
+      username: {
+        value: state.ui.username,
         ttl,
       },
     };
@@ -77,7 +78,7 @@ class PersistManager {
 
   load() {
     const handlers: RestoreHandlers = {
-      password: password => store.dispatch({ type: 'nothing' }),  // TODO
+      username: username => store.dispatch(setUsername(username.value)),
     };
 
     batch(() => {
