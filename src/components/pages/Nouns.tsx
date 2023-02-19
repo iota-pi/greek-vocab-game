@@ -9,7 +9,9 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
+  Theme,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { default as CheckIcon } from '@mui/icons-material/Check';
 import { default as BackIcon } from '@mui/icons-material/ChevronLeft';
@@ -28,7 +30,10 @@ const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
 const GENDERS: Gender[] = ['masculine', 'feminine', 'neuter'];
 
-const ROW_WIDTH = 150;
+const COL_WIDTH = 140;
+const COL_WIDTH_SM = 80;
+const FIRST_COL_WIDTH = 80;
+const FIRST_COL_WIDTH_SM = 50;
 
 const NUM_QUESTIONS = 20;
 const DEFAULT_TIME = 1000 * 60 * 60;
@@ -86,6 +91,10 @@ function MenuPage() {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
   const history = useHistory();
+
+  const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
+  const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
 
   const goTo = useCallback(
     (pageId: PageId) => {
@@ -218,17 +227,23 @@ function MenuPage() {
 
             <Stack spacing={2} pt={2}>
               <Stack direction="row" spacing={2}>
-                <Box minWidth={ROW_WIDTH} />
+                <Box minWidth={firstColWidth} />
 
                 {GENDERS.map(gender => (
                   <Box
                     alignItems="center"
                     display="flex"
                     justifyContent="center"
-                    minWidth={ROW_WIDTH}
+                    minWidth={colWidth}
                     key={gender}
                   >
-                    <strong>{getGenderName(gender)}</strong>
+                    <strong>
+                      {(
+                        sm
+                          ? `${getGenderName(gender).slice(0, 4).replace(/i$/, '')}.`
+                          : getGenderName(gender)
+                      )}
+                    </strong>
                   </Box>
                 ))}
               </Stack>
@@ -237,37 +252,47 @@ function MenuPage() {
                 <Fragment key={number}>
                   <Divider />
 
-                  {CASES.map((nounCase, i) => (
-                    <Stack direction="row" spacing={2} key={`${nounCase}${number}`}>
-                      <Box
-                        minWidth={ROW_WIDTH}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        {i === 0 && (
-                          <strong>{getNumberName(number)}</strong>
-                        )}
-                      </Box>
+                  {CASES.map((nounCase, i) => {
+                    const numberName = getNumberName(number);
+                    return (
+                      <Stack direction="row" spacing={2} key={`${nounCase}${number}`}>
+                        <Box
+                          minWidth={firstColWidth}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          {i === 0 && (
+                            <strong>
+                              {(
+                                sm
+                                  ? `${numberName.slice(0, numberName.length - 4)}.`
+                                  : numberName
+                              )}
+                            </strong>
+                          )}
+                        </Box>
 
-                      {GENDERS.map(gender => {
-                        const key = `${nounCase}${number}${gender}`
-                        return (
-                          <Button
-                            key={key}
-                            onClick={() => checkAnswer(nounCase, number, gender)}
-                            size="large"
-                            variant="outlined"
-                            sx={{
-                              minWidth: ROW_WIDTH,
-                            }}
-                          >
-                            {getCaseName(nounCase)}
-                          </Button>
-                        );
-                      })}
-                    </Stack>
-                  ))}
+                        {GENDERS.map(gender => {
+                          const key = `${nounCase}${number}${gender}`;
+                          const caseName = getCaseName(nounCase);
+                          return (
+                            <Button
+                              key={key}
+                              onClick={() => checkAnswer(nounCase, number, gender)}
+                              size="large"
+                              variant="outlined"
+                              sx={{
+                                minWidth: colWidth,
+                              }}
+                            >
+                              {sm ? caseName.slice(0, 3) : caseName}
+                            </Button>
+                          );
+                        })}
+                      </Stack>
+                    );
+                  })}
                 </Fragment>
               ))}
             </Stack>
