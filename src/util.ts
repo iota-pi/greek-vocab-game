@@ -66,5 +66,5 @@ export function formatTime(time: { m: number, ms: number, s: number }) {
   const m = time.m.toString().padStart(2, '0');
   const s = time.s.toString().padStart(2, '0');
   const ms = Math.floor(time.ms / 10).toString().padStart(2, '0');
-  return `${m}:${s}:${ms}`;
+  return `${m}:${s}.${ms}`;
 }
