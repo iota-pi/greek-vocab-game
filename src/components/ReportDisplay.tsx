@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CrossIcon from '@mui/icons-material/Close';
-import { Report } from './types';
+import { Report } from '../types';
 
 
 function ReportDisplay<P>(

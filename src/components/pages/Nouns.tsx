@@ -24,9 +24,10 @@ import type {
 } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
 import Timer from '../Timer';
-import HighScores from '../../HighScores';
+import HighScores from '../HighScores';
 import { getPage, PageId } from '.';
-import ReportDisplay from '../../ReportDisplay';
+import ReportDisplay from '../ReportDisplay';
+import StartGameDialog from '../StartGameDialog';
 
 const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
@@ -38,7 +39,6 @@ const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
 const NUM_QUESTIONS = 20;
-const DEFAULT_TIME = 1000 * 60 * 60;
 
 function pickWord(): NounWithParsing {
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
@@ -282,90 +282,24 @@ function MenuPage() {
             </Stack>
           </>
         ) : (
-          <Dialog
-            open
-          >
-            <DialogContent>
-              <Stack spacing={2}>
-                <Typography variant="h3">
-                  Greek Noun Parsing
-                </Typography>
-                <Button
-                  onClick={handleStart}
-                  variant="contained"
-                >
-                  Start
-                </Button>
-
-                {report.length > 0 && (
-                  <>
-                    <Divider />
-
-                    <div>
-                      <Typography
-                        component="div"
-                        color={score === total ? 'success.main' : 'warning.main'}
-                        fontWeight={400}
-                        textAlign="center"
-                        variant="h5"
-                      >
-                        {score} / {total}
-                      </Typography>
-
-                      <Typography
-                        textAlign="center"
-                        variant="h5"
-                      >
-                        {startTime && (
-                          <Timer startTime={startTime} endTime={endTime} />
-                        )}
-                      </Typography>
-                    </div>
-
-                    <ReportDisplay
-                      report={report}
-                      formatter={parsing => (
-                        [
-                          getCaseName(parsing.nounCase),
-                          getNumberName(parsing.number),
-                          getGenderName(parsing.gender),
-                        ].join(' ')
-                      )}
-                    />
-                  </>
-                )}
-
-                <HighScores
-                  category="nouns"
-                  canSubmit={report.length > 0}
-                  score={score}
-                  time={(
-                    startTime && endTime
-                      ? endTime.getTime() - startTime.getTime()
-                      : DEFAULT_TIME
-                  )}
-                  total={total}
-                />
-
-                {report.length > 0 && (
-                  <Button
-                    variant="outlined"
-                    onClick={handleStart}
-                  >
-                    Play again
-                  </Button>
-                )}
-
-                <Button
-                  size="large"
-                  onClick={() => goTo('menu')}
-                  startIcon={<BackIcon />}
-                >
-                  Change game
-                </Button>
-              </Stack>
-            </DialogContent>
-          </Dialog>
+          <StartGameDialog
+            title="Greek Noun Parsing"
+            onStart={handleStart}
+            report={report}
+            endTime={endTime}
+            startTime={startTime}
+            formatter={(
+              parsing => (
+                [
+                  getCaseName(parsing.nounCase),
+                  getNumberName(parsing.number),
+                  getGenderName(parsing.gender),
+                ].join(' ')
+              )
+            )}
+            score={score}
+            total={total}
+          />
         )}
 
         <Divider />
