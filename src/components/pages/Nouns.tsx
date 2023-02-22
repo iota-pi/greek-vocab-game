@@ -24,9 +24,7 @@ import type {
 } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
 import Timer from '../Timer';
-import HighScores from '../HighScores';
 import { getPage, PageId } from '.';
-import ReportDisplay from '../ReportDisplay';
 import StartGameDialog from '../StartGameDialog';
 
 const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
