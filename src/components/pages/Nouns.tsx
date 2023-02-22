@@ -4,27 +4,29 @@ import {
   Dialog,
   DialogContent,
   Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Stack,
   Theme,
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
 import BackIcon from '@mui/icons-material/ChevronLeft';
-import CrossIcon from '@mui/icons-material/Close';
 import { Fragment, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import nouns from '../../data/nouns';
 import { declineNoun, getGender } from '../../decliner';
-import type { Gender, NounCase, WordNumber } from '../../types';
+import type {
+  Gender,
+  NounCase,
+  NounParsing,
+  NounWithParsing,
+  Report,
+  WordNumber,
+} from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
 import Timer from '../Timer';
 import HighScores from '../../HighScores';
 import { getPage, PageId } from '.';
+import ReportDisplay from '../../ReportDisplay';
 
 const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
@@ -38,25 +40,7 @@ const FIRST_COL_WIDTH_SM = 50;
 const NUM_QUESTIONS = 20;
 const DEFAULT_TIME = 1000 * 60 * 60;
 
-type Parsing = {
-  nounCase: NounCase,
-  gender: Gender,
-  number: WordNumber,
-};
-
-type WordWithParsing = Parsing & {
-  word: string,
-  lexical: string,
-};
-
-type Report = {
-  word: string,
-  correct: boolean,
-  expected: Parsing,
-  given: Parsing,
-};
-
-function pickWord(): WordWithParsing {
+function pickWord(): NounWithParsing {
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
   const gender = getGender(noun.word);
   const nounCase = CASES[Math.floor(Math.random() * CASES.length)];
@@ -87,7 +71,7 @@ function MenuPage() {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
-  const [report, setReport] = useState<Report[]>([]);
+  const [report, setReport] = useState<Report<NounParsing>[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
   const history = useHistory();
@@ -135,7 +119,7 @@ function MenuPage() {
         setScore(s => s + 1);
       }
 
-      const newReport: Report = {
+      const newReport: Report<NounParsing> = {
         word: currentWord.word,
         correct,
         expected: { ...currentWord },
@@ -338,31 +322,16 @@ function MenuPage() {
                       </Typography>
                     </div>
 
-                    <List dense>
-                      {report.map(({ correct, given, expected, word }, i) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <ListItem key={`reportItem-${i}`}>
-                          <ListItemIcon>
-                            {(
-                              correct
-                                ? <CheckIcon color="success" />
-                                : <CrossIcon color="error" />
-                            )}
-                          </ListItemIcon>
-
-                          <ListItemText
-                            primary={(
-                              `${word} — ${getCaseName(given.nounCase)} `
-                              + `${getNumberName(given.number)} ${getGenderName(given.gender)}`
-                            )}
-                            secondary={correct ? '' : (
-                              `Expected: ${getCaseName(expected.nounCase)} `
-                              + `${getNumberName(expected.number)} ${getGenderName(expected.gender)}`
-                            )}
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
+                    <ReportDisplay
+                      report={report}
+                      formatter={parsing => (
+                        [
+                          getCaseName(parsing.nounCase),
+                          getNumberName(parsing.number),
+                          getGenderName(parsing.gender),
+                        ].join(' ')
+                      )}
+                    />
                   </>
                 )}
 
