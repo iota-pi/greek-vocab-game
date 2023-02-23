@@ -12,7 +12,7 @@ describe('declineNoun', () => {
     ['ποιεω', 'first', 'singular', 'ποιω'],
     ['ποιεω', 'first', 'plural', 'ποιουμεν'],
     ['εἰμι', 'first', 'singular', 'εἰμι'],
-    ['εἰμι', 'second', 'singular', 'ε̂ἰ'],
+    ['εἰμι', 'second', 'singular', 'εἶ'],
     ['εἰμι', 'first', 'plural', 'ἐσμεν'],
   ])('declineNoun(%s, %s, %s) = "%s"', (verb, person, number, expected) => {
     const result = conjugateVerb({

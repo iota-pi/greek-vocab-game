@@ -49,7 +49,7 @@ const paradigms: Record<VerbEnding, Paradigm> = {
     pattern: {
       singular: {
         first: 'εἰμι',
-        second: 'ε̂ἰ',
+        second: 'εἶ',
         third: 'ἐστιν',
       },
       plural: {
