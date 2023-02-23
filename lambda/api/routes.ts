@@ -54,9 +54,15 @@ const routes: FastifyPluginCallback = (fastify, opts, next) => {
     const { category, username } = request.params as { category: string, username: string };
     const { score, time, total } = request.body as Omit<HighScore, 'name'>;
 
-    if (!/^[a-zA-Z0-9_]+$/.test(username) || !checkCategory(category)) {
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      console.warn(`Invalid username ${username}`);
       reply.code(400);
-      return { success: false };
+      return { success: false, message: 'Invalid username' };
+    }
+    if (!checkCategory(category)) {
+      console.warn(`Invalid category ${category}`);
+      reply.code(400);
+      return { success: false, message: 'Invalid category' };
     }
 
     await ddb.put({
