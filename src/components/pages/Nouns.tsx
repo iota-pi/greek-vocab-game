@@ -73,7 +73,18 @@ function MenuPage() {
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
 
-  const getNewWord = useCallback(() => setCurrentWord(pickWord()), []);
+  const getNewWord = useCallback(
+    () => setCurrentWord(
+      prev => {
+        let word = pickWord();
+        for (let i = 0; i < 3 && word === prev; ++i) {
+          word = pickWord();
+        }
+        return word;
+      },
+    ),
+    [],
+  );
 
   const checkAnswer = useCallback(
     (nounCase: NounCase, number: WordNumber, gender: Gender) => {
@@ -132,8 +143,9 @@ function MenuPage() {
       setTotal(0);
       setStartTime(new Date());
       setEndTime(null);
+      getNewWord();
     },
-    [],
+    [getNewWord],
   );
 
   const handleRestart = useCallback(
