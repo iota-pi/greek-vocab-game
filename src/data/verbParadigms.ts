@@ -44,7 +44,7 @@ const paradigms: Record<VerbEnding, Paradigm> = {
     },
     ending: 'εω',
   },
-  'εἰμι': {
+  εἰμι: {
     example: 'εἰμι',
     pattern: {
       singular: {
