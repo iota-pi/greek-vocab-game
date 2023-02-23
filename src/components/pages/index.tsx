@@ -2,10 +2,12 @@ import { ReactNode, useMemo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import MenuPage from './Menu';
 import NounsPage from './Nouns';
+import VerbsPage from './Verbs';
 
 export type PageId = (
   | 'menu'
   | 'nouns'
+  | 'verbs'
 );
 
 export interface Page {
@@ -27,6 +29,12 @@ export const pages: Page[] = [
     path: '/nouns/',
     name: 'Nouns',
     page: <NounsPage />,
+  },
+  {
+    id: 'verbs',
+    path: '/verbs/',
+    name: 'Verbs',
+    page: <VerbsPage />,
   },
 ];
 

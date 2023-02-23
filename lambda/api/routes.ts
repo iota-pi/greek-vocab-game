@@ -8,8 +8,11 @@ const TableName = process.env.SCORES_TABLE_NAME!;
 const MAX_RESULTS = 10;
 
 const checkCategory = (category: string) => {
-  const categories: GameCategory[] = ['nouns'];
-  return (categories as string[]).includes(category);
+  const categories: Record<GameCategory, true> = {
+    nouns: true,
+    verbs: true,
+  };
+  return categories[category as GameCategory] === true;
 };
 
 const routes: FastifyPluginCallback = (fastify, opts, next) => {

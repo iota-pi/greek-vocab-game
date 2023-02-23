@@ -42,6 +42,14 @@ function MenuPage() {
         >
           Noun parsing
         </Button>
+
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => goTo('verbs')}
+        >
+          Present verb parsing
+        </Button>
       </Stack>
     </Box>
   );

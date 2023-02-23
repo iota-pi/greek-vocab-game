@@ -1,4 +1,4 @@
-import paradigms, { ParadigmName, type NounEnding } from './data/paradigms';
+import paradigms, { ParadigmName, type NounEnding } from './data/nounParadigms';
 import nouns from './data/nouns';
 import type { Article, Gender, NounCase, WordNumber } from './types';
 

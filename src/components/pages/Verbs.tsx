@@ -1,35 +1,30 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogContent,
   Divider,
   Stack,
   Theme,
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import BackIcon from '@mui/icons-material/ChevronLeft';
 import { Fragment, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import nouns from '../../data/nouns';
-import { declineNoun, getGender } from '../../decliner';
+import verbs from '../../data/verbs';
 import type {
-  Gender,
-  NounCase,
-  NounParsing,
-  NounWithParsing,
+  VerbPerson,
+  VerbWithParsing,
   Report,
   WordNumber,
+  VerbParsing,
 } from '../../types';
-import { getCaseName, getGenderName, getNumberName } from '../../util';
+import { getCaseName, getGenderName, getNumberName, getPersonName } from '../../util';
 import Timer from '../Timer';
 import { getPage, PageId } from '.';
 import StartGameDialog from '../StartGameDialog';
+import { conjugateVerb } from '../../conjugater';
 
-const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
+const PERSONS: VerbPerson[] = ['first', 'second', 'third'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const GENDERS: Gender[] = ['masculine', 'feminine', 'neuter'];
 
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 80;
@@ -38,27 +33,22 @@ const FIRST_COL_WIDTH_SM = 50;
 
 const NUM_QUESTIONS = 20;
 
-function pickWord(): NounWithParsing {
-  const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  const gender = getGender(noun.word);
-  const nounCase = CASES[Math.floor(Math.random() * CASES.length)];
+function pickWord(): VerbWithParsing {
+  const verb = verbs[Math.floor(Math.random() * verbs.length)];
+  const person = PERSONS[Math.floor(Math.random() * PERSONS.length)];
   let number = NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
-  if (noun.singular) {
-    number = 'singular';
-  }
   try {
-    const word = declineNoun({ noun: noun.word, nounCase, number });
+    const word = conjugateVerb({ verb: verb.word, person, number });
     return {
       word,
-      lexical: noun.word,
-      nounCase,
+      lexical: verb.word,
+      person,
       number,
-      gender,
     };
   } catch (error) {
     // Log error and re-attempt
     console.log(
-      `Error while declining word ${noun.word} ${nounCase} ${number}`,
+      `Error while declining word ${verb.word} ${person} ${number}`,
     );
     console.error(error);
     return pickWord();
@@ -69,7 +59,7 @@ function MenuPage() {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
-  const [report, setReport] = useState<Report<NounParsing>[]>([]);
+  const [report, setReport] = useState<Report<VerbParsing>[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
   const history = useHistory();
@@ -89,26 +79,14 @@ function MenuPage() {
   const getNewWord = useCallback(() => setCurrentWord(pickWord()), []);
 
   const checkAnswer = useCallback(
-    (nounCase: NounCase, number: WordNumber, gender: Gender) => {
+    (person: VerbPerson, number: WordNumber) => {
       let correct = false;
-      const declinedGuess = declineNoun({
-        noun: currentWord.lexical,
-        nounCase,
+      const declinedGuess = conjugateVerb({
+        verb: currentWord.lexical,
+        person,
         number,
       });
-      if (
-        gender === currentWord.gender
-        && declinedGuess === currentWord.word
-      ) {
-        correct = true;
-      }
-
-      // Handle special ambiguous cases
-      if (
-        currentWord.word === 'οἰκων'
-        && declinedGuess === currentWord.word
-        && gender !== 'neuter'
-      ) {
+      if (declinedGuess === currentWord.word) {
         correct = true;
       }
 
@@ -117,14 +95,13 @@ function MenuPage() {
         setScore(s => s + 1);
       }
 
-      const newReport: Report<NounParsing> = {
+      const newReport: Report<VerbParsing> = {
         word: currentWord.word,
         correct,
         expected: { ...currentWord },
         given: {
-          nounCase,
+          person,
           number,
-          gender,
         },
       };
       setReport(r => [...r, newReport]);
@@ -210,34 +187,18 @@ function MenuPage() {
             <Stack spacing={2} pt={2}>
               <Stack direction="row" spacing={2}>
                 <Box minWidth={firstColWidth} />
-
-                {GENDERS.map(gender => (
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    justifyContent="center"
-                    minWidth={colWidth}
-                    key={gender}
-                  >
-                    <strong>
-                      {(
-                        sm
-                          ? `${getGenderName(gender).slice(0, 4).replace(/i$/, '')}.`
-                          : getGenderName(gender)
-                      )}
-                    </strong>
-                  </Box>
-                ))}
               </Stack>
 
               {NUMBERS.map(number => (
                 <Fragment key={number}>
                   <Divider />
 
-                  {CASES.map((nounCase, i) => {
+                  {PERSONS.map((person, i) => {
                     const numberName = getNumberName(number);
+                    const personName = getPersonName(person);
+                    const key = `${person}-${number}`;
                     return (
-                      <Stack direction="row" spacing={2} key={`${nounCase}${number}`}>
+                      <Stack direction="row" spacing={2} key={key}>
                         <Box
                           minWidth={firstColWidth}
                           display="flex"
@@ -255,23 +216,16 @@ function MenuPage() {
                           )}
                         </Box>
 
-                        {GENDERS.map(gender => {
-                          const key = `${nounCase}${number}${gender}`;
-                          const caseName = getCaseName(nounCase);
-                          return (
-                            <Button
-                              key={key}
-                              onClick={() => checkAnswer(nounCase, number, gender)}
-                              size="large"
-                              variant="outlined"
-                              sx={{
-                                minWidth: colWidth,
-                              }}
-                            >
-                              {sm ? caseName.slice(0, 3) : caseName}
-                            </Button>
-                          );
-                        })}
+                        <Button
+                          onClick={() => checkAnswer(person, number)}
+                          size="large"
+                          variant="outlined"
+                          sx={{
+                            minWidth: colWidth,
+                          }}
+                        >
+                          {sm ? personName.slice(0, 3) : personName}
+                        </Button>
                       </Stack>
                     );
                   })}
@@ -281,8 +235,8 @@ function MenuPage() {
           </>
         ) : (
           <StartGameDialog
-            category='nouns'
-            title="Greek Noun Parsing"
+            category='verbs'
+            title="Present Verb Parsing"
             onStart={handleStart}
             report={report}
             endTime={endTime}
@@ -290,9 +244,8 @@ function MenuPage() {
             formatter={(
               parsing => (
                 [
-                  getCaseName(parsing.nounCase),
+                  getPersonName(parsing.person),
                   getNumberName(parsing.number),
-                  getGenderName(parsing.gender),
                 ].join(' ')
               )
             )}

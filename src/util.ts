@@ -1,4 +1,4 @@
-import { Gender, NounCase, WordNumber } from './types';
+import { Gender, NounCase, VerbPerson, WordNumber } from './types';
 
 export const API_ENDPOINT = (
   'https://s46ipfbb5e.execute-api.ap-southeast-2.amazonaws.com/production'
@@ -44,6 +44,15 @@ export function getNumberName(number: WordNumber) {
     plural: 'Plural',
   };
   return mapping[number];
+}
+
+export function getPersonName(person: VerbPerson) {
+  const mapping: Record<VerbPerson, string> = {
+    first: 'First',
+    second: 'Second',
+    third: 'Third',
+  };
+  return mapping[person];
 }
 
 export function getGenderName(gender: Gender) {

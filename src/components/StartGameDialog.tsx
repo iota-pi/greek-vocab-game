@@ -1,18 +1,16 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogContent,
   Divider,
   Stack,
-  Theme,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import BackIcon from '@mui/icons-material/ChevronLeft';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import type {
+  GameCategory,
   Report,
 } from '../types';
 import HighScores from './HighScores';
@@ -23,6 +21,7 @@ import Timer from './Timer';
 const DEFAULT_TIME = 1000 * 60 * 60;
 
 function StartGameDialog<T>({
+  category,
   endTime,
   formatter,
   onStart,
@@ -32,6 +31,7 @@ function StartGameDialog<T>({
   title,
   total,
 }: {
+  category: GameCategory,
   endTime: Date | null,
   formatter: (form: T) => string,
   onStart: () => void,
@@ -93,7 +93,7 @@ function StartGameDialog<T>({
           )}
 
           <HighScores
-            category="nouns"
+            category={category}
             canSubmit={report.length > 0}
             score={score}
             time={(
