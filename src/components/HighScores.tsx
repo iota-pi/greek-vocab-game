@@ -86,7 +86,7 @@ function HighScores(
   );
 
   const highScoresToShow = useMemo(
-    () => showMore ? highScores : highScores.slice(0, SHOW_LESS_LIMIT),
+    () => (showMore ? highScores : highScores.slice(0, SHOW_LESS_LIMIT)),
     [highScores, showMore],
   );
 

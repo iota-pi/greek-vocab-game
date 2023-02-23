@@ -1,17 +1,13 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogContent,
   Divider,
   Stack,
   Theme,
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import BackIcon from '@mui/icons-material/ChevronLeft';
 import { Fragment, useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import nouns from '../../data/nouns';
 import { declineNoun, getGender } from '../../decliner';
 import type {
@@ -72,19 +68,10 @@ function MenuPage() {
   const [report, setReport] = useState<Report<NounParsing>[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
-  const history = useHistory();
 
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
-
-  const goTo = useCallback(
-    (pageId: PageId) => {
-      const page = getPage(pageId);
-      history.push(page.path);
-    },
-    [history],
-  );
 
   const getNewWord = useCallback(() => setCurrentWord(pickWord()), []);
 
@@ -281,7 +268,7 @@ function MenuPage() {
           </>
         ) : (
           <StartGameDialog
-            category='nouns'
+            category="nouns"
             title="Greek Noun Parsing"
             onStart={handleStart}
             report={report}

@@ -12,7 +12,7 @@ export type Paradigm = {
 export type VerbEnding = 'ω' | 'εω';
 
 const paradigms: Record<VerbEnding, Paradigm> = {
-  'ω': {
+  ω: {
     example: 'λυω',
     pattern: {
       singular: {
@@ -28,7 +28,7 @@ const paradigms: Record<VerbEnding, Paradigm> = {
     },
     ending: 'ω',
   },
-  'εω': {
+  εω: {
     example: 'ποιεω',
     pattern: {
       singular: {
