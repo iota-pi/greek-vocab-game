@@ -9,7 +9,7 @@ export type Paradigm = {
   pattern: ParadigmPattern,
   ending: VerbEnding,
 };
-export type VerbEnding = 'ω' | 'εω';
+export type VerbEnding = 'ω' | 'εω' | 'εἰμι';
 
 const paradigms: Record<VerbEnding, Paradigm> = {
   ω: {
@@ -43,6 +43,22 @@ const paradigms: Record<VerbEnding, Paradigm> = {
       },
     },
     ending: 'εω',
+  },
+  'εἰμι': {
+    example: 'εἰμι',
+    pattern: {
+      singular: {
+        first: 'εἰμι',
+        second: 'ε̂ἰ',
+        third: 'ἐστιν',
+      },
+      plural: {
+        first: 'ἐσμεν',
+        second: 'ἐστε',
+        third: 'εἰσιν',
+      },
+    },
+    ending: 'εἰμι',
   },
 };
 

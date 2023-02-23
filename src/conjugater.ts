@@ -26,7 +26,7 @@ export function getParadigm(verb: string) {
 }
 
 export function getEnding(verb: string) {
-  const endings: VerbEnding[] = ['εω', 'ω'];
+  const endings: VerbEnding[] = ['εἰμι', 'εω', 'ω'];
   for (const ending of endings) {
     if (verb.endsWith(ending)) {
       return ending;

@@ -5,6 +5,14 @@ type VerbData = {
 
 const verbs: VerbData[] = [
   {
+    word: 'εἰμι',
+    lexical: 'εἰμι',
+  },
+  {
+    word: 'εἰμι',
+    lexical: 'εἰμι',
+  },
+  {
     word: 'λυω',
     lexical: 'λυω',
   },
