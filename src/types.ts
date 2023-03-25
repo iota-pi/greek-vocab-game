@@ -3,8 +3,8 @@ export type VerbPerson = 'first' | 'second' | 'third';
 export type WordNumber = 'singular' | 'plural';
 export type Gender = 'masculine' | 'feminine' | 'neuter';
 export type Article = 'ὁ' | 'ἡ' | 'το';
-export type GameCategory = 'nouns' | 'verbs';
-
+export type GameCategory = 'nouns' | 'verbs' | 'piaf-verbs';
+export type VerbTense = 'present' | 'imperfect' | 'aorist' | 'future';
 
 export type NounParsing = {
   nounCase: NounCase,
@@ -15,7 +15,14 @@ export type NounParsing = {
 export type VerbParsing = {
   person: VerbPerson,
   number: WordNumber,
+  tense: VerbTense,
 };
+
+export type VerbParadigmPattern = {
+  singular: Record<VerbPerson, string>,
+  plural: Record<VerbPerson, string>,
+};
+export type VerbTenseParadigms = Record<VerbTense, VerbParadigmPattern>;
 
 export type NounWithParsing = NounParsing & {
   word: string,

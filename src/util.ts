@@ -1,4 +1,4 @@
-import { Gender, NounCase, VerbPerson, WordNumber } from './types';
+import { Gender, NounCase, VerbPerson, VerbTense, WordNumber } from './types';
 
 export const API_ENDPOINT = (
   'https://s46ipfbb5e.execute-api.ap-southeast-2.amazonaws.com/production'
@@ -62,6 +62,16 @@ export function getGenderName(gender: Gender) {
     neuter: 'Neuter',
   };
   return mapping[gender];
+}
+
+export function getTenseName(tense: VerbTense) {
+  const mapping: Record<VerbTense, string> = {
+    aorist: 'Aorist',
+    imperfect: 'Imperfect',
+    present: 'Present',
+    future: 'Future',
+  };
+  return mapping[tense];
 }
 
 export function splitTime(time: number) {

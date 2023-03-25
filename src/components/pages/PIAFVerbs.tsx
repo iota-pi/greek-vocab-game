@@ -8,63 +8,61 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { Fragment, useCallback, useState } from 'react';
-import nouns from '../../data/nouns';
-import { declineNoun, getGender } from '../../decliner';
+import verbs from '../../data/verbs';
 import type {
-  Gender,
-  NounCase,
-  NounParsing,
-  NounWithParsing,
+  VerbPerson,
+  VerbWithParsing,
   Report,
   WordNumber,
+  VerbParsing,
+  VerbTense,
 } from '../../types';
-import { getCaseName, getGenderName, getNumberName } from '../../util';
+import { getNumberName, getPersonName, getTenseName } from '../../util';
 import Timer from '../Timer';
 import StartGameDialog from '../StartGameDialog';
+import { conjugateVerb } from '../../conjugater';
 
-const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
+const PERSONS: VerbPerson[] = ['first', 'second', 'third'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const GENDERS: Gender[] = ['masculine', 'feminine', 'neuter'];
+const TENSES: VerbTense[] = ['present', 'imperfect', 'aorist', 'future'];
 
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
-const NUM_QUESTIONS = 20;
+const NUM_QUESTIONS = 10;
 
-function pickWord(): NounWithParsing {
-  const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  const gender = getGender(noun.word);
-  const nounCase = CASES[Math.floor(Math.random() * CASES.length)];
-  let number = NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
-  if (noun.singular) {
-    number = 'singular';
-  }
+function pickWord(): VerbWithParsing {
+  const verb = verbs[Math.floor(Math.random() * verbs.length)];
+  const person = PERSONS[Math.floor(Math.random() * PERSONS.length)];
+  const number = NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
+  const validTenses = TENSES.filter(t => !verb.omit?.includes(t));
+  const tense = validTenses[Math.floor(Math.random() * validTenses.length)];
   try {
-    const word = declineNoun({ noun: noun.word, nounCase, number });
+    const word = conjugateVerb({ verb: verb.word, person, number, tense });
     return {
       word,
-      lexical: noun.word,
-      nounCase,
+      lexical: verb.word,
+      person,
       number,
-      gender,
+      tense,
     };
   } catch (error) {
     // Log error and re-attempt
     console.log(
-      `Error while declining word ${noun.word} ${nounCase} ${number}`,
+      `Error while declining word ${verb.word} ${person} ${number}`,
     );
     console.error(error);
     return pickWord();
   }
 }
 
-function Nouns() {
+function PIAFVerbs() {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
-  const [report, setReport] = useState<Report<NounParsing>[]>([]);
+  const [report, setReport] = useState<Report<VerbParsing>[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
 
@@ -86,26 +84,15 @@ function Nouns() {
   );
 
   const checkAnswer = useCallback(
-    (nounCase: NounCase, number: WordNumber, gender: Gender) => {
+    (tense: VerbTense, person: VerbPerson, number: WordNumber) => {
       let correct = false;
-      const declinedGuess = declineNoun({
-        noun: currentWord.lexical,
-        nounCase,
+      const declinedGuess = conjugateVerb({
+        verb: currentWord.lexical,
+        tense,
+        person,
         number,
       });
-      if (
-        gender === currentWord.gender
-        && declinedGuess === currentWord.word
-      ) {
-        correct = true;
-      }
-
-      // Handle special ambiguous cases
-      if (
-        currentWord.word === 'οἰκων'
-        && declinedGuess === currentWord.word
-        && gender !== 'neuter'
-      ) {
+      if (declinedGuess === currentWord.word) {
         correct = true;
       }
 
@@ -114,14 +101,14 @@ function Nouns() {
         setScore(s => s + 1);
       }
 
-      const newReport: Report<NounParsing> = {
+      const newReport: Report<VerbParsing> = {
         word: currentWord.word,
         correct,
         expected: { ...currentWord },
         given: {
-          nounCase,
+          person,
           number,
-          gender,
+          tense,
         },
       };
       setReport(r => [...r, newReport]);
@@ -209,19 +196,19 @@ function Nouns() {
               <Stack direction="row" spacing={2}>
                 <Box minWidth={firstColWidth} />
 
-                {GENDERS.map(gender => (
+                {TENSES.map(tense => (
                   <Box
                     alignItems="center"
                     display="flex"
                     justifyContent="center"
                     minWidth={colWidth}
-                    key={gender}
+                    key={tense}
                   >
                     <strong>
                       {(
                         sm
-                          ? `${getGenderName(gender).slice(0, 4).replace(/i$/, '')}.`
-                          : getGenderName(gender)
+                          ? `${getTenseName(tense).slice(0, 4).replace(/i$/, '')}.`
+                          : getTenseName(tense)
                       )}
                     </strong>
                   </Box>
@@ -232,10 +219,12 @@ function Nouns() {
                 <Fragment key={number}>
                   <Divider />
 
-                  {CASES.map((nounCase, i) => {
+                  {PERSONS.map((person, i) => {
                     const numberName = getNumberName(number);
+                    const personName = getPersonName(person);
+                    const key = `${person}-${number}`;
                     return (
-                      <Stack direction="row" spacing={2} key={`${nounCase}${number}`}>
+                      <Stack direction="row" spacing={2} key={key}>
                         <Box
                           minWidth={firstColWidth}
                           display="flex"
@@ -253,20 +242,19 @@ function Nouns() {
                           )}
                         </Box>
 
-                        {GENDERS.map(gender => {
-                          const key = `${nounCase}${number}${gender}`;
-                          const caseName = getCaseName(nounCase);
+                        {TENSES.map(tense => {
+                          const innerKey = `${key}-${tense}`;
                           return (
                             <Button
-                              key={key}
-                              onClick={() => checkAnswer(nounCase, number, gender)}
+                              key={innerKey}
+                              onClick={() => checkAnswer(tense, person, number)}
                               size="large"
-                              variant="outlined"
                               sx={{
                                 minWidth: colWidth,
                               }}
+                              variant="outlined"
                             >
-                              {sm ? caseName.slice(0, 3) : caseName}
+                              {sm ? personName.slice(0, 3) : personName}
                             </Button>
                           );
                         })}
@@ -279,8 +267,8 @@ function Nouns() {
           </>
         ) : (
           <StartGameDialog
-            category="nouns"
-            title="Greek Noun Parsing"
+            category="piaf-verbs"
+            title="Verb Parsing"
             onStart={handleStart}
             report={report}
             endTime={endTime}
@@ -288,9 +276,9 @@ function Nouns() {
             formatter={(
               parsing => (
                 [
-                  getCaseName(parsing.nounCase),
+                  getTenseName(parsing.tense),
+                  getPersonName(parsing.person),
                   getNumberName(parsing.number),
-                  getGenderName(parsing.gender),
                 ].join(' ')
               )
             )}
@@ -305,4 +293,4 @@ function Nouns() {
   );
 }
 
-export default Nouns;
+export default PIAFVerbs;

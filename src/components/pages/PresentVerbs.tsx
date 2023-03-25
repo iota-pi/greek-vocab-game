@@ -35,13 +35,15 @@ function pickWord(): VerbWithParsing {
   const verb = verbs[Math.floor(Math.random() * verbs.length)];
   const person = PERSONS[Math.floor(Math.random() * PERSONS.length)];
   const number = NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
+  const tense = 'present';
   try {
-    const word = conjugateVerb({ verb: verb.word, person, number });
+    const word = conjugateVerb({ verb: verb.word, person, number, tense });
     return {
       word,
       lexical: verb.word,
       person,
       number,
+      tense,
     };
   } catch (error) {
     // Log error and re-attempt
@@ -53,7 +55,7 @@ function pickWord(): VerbWithParsing {
   }
 }
 
-function MenuPage() {
+function PresentVerbs() {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
@@ -80,9 +82,11 @@ function MenuPage() {
 
   const checkAnswer = useCallback(
     (person: VerbPerson, number: WordNumber) => {
+      const tense = 'present';
       let correct = false;
       const declinedGuess = conjugateVerb({
         verb: currentWord.lexical,
+        tense,
         person,
         number,
       });
@@ -102,6 +106,7 @@ function MenuPage() {
         given: {
           person,
           number,
+          tense,
         },
       };
       setReport(r => [...r, newReport]);
@@ -261,4 +266,4 @@ function MenuPage() {
   );
 }
 
-export default MenuPage;
+export default PresentVerbs;

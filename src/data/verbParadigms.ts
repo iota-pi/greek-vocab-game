@@ -1,64 +1,120 @@
-import { VerbPerson } from '../types';
+import { VerbTenseParadigms } from '../types';
 
-type ParadigmPattern = {
-  singular: Record<VerbPerson, string>,
-  plural: Record<VerbPerson, string>,
-};
 export type Paradigm = {
   example: string,
-  pattern: ParadigmPattern,
+  tenses: VerbTenseParadigms,
   ending: VerbEnding,
 };
-export type VerbEnding = 'ω' | 'εω' | 'εἰμι';
+export type VerbEnding = 'ω' | 'εω';
 
 const paradigms: Record<VerbEnding, Paradigm> = {
   ω: {
     example: 'λυω',
-    pattern: {
-      singular: {
-        first: 'ω',
-        second: 'εις',
-        third: 'ει',
+    tenses: {
+      present: {
+        singular: {
+          first: 'ω',
+          second: 'εις',
+          third: 'ει',
+        },
+        plural: {
+          first: 'ομεν',
+          second: 'ετε',
+          third: 'ουσιν',
+        },
       },
-      plural: {
-        first: 'ομεν',
-        second: 'ετε',
-        third: 'ουσιν',
+      imperfect: {
+        singular: {
+          first: 'ον',
+          second: 'ες',
+          third: 'εν',
+        },
+        plural: {
+          first: 'ομεν',
+          second: 'ετε',
+          third: 'ον',
+        },
+      },
+      aorist: {
+        singular: {
+          first: 'σα',
+          second: 'σας',
+          third: 'σεν',
+        },
+        plural: {
+          first: 'σαμεν',
+          second: 'σατε',
+          third: 'σαν',
+        },
+      },
+      future: {
+        singular: {
+          first: 'σω',
+          second: 'σεις',
+          third: 'σει',
+        },
+        plural: {
+          first: 'σομεν',
+          second: 'σετε',
+          third: 'σουσιν',
+        },
       },
     },
     ending: 'ω',
   },
   εω: {
     example: 'ποιεω',
-    pattern: {
-      singular: {
-        first: 'ω',
-        second: 'εις',
-        third: 'ει',
+    tenses: {
+      present: {
+        singular: {
+          first: 'ω',
+          second: 'εις',
+          third: 'ει',
+        },
+        plural: {
+          first: 'ουμεν',
+          second: 'ειτε',
+          third: 'ουσιν',
+        },
       },
-      plural: {
-        first: 'ουμεν',
-        second: 'ειτε',
-        third: 'ουσιν',
+      imperfect: {
+        singular: {
+          first: 'ουν',
+          second: 'εις',
+          third: 'ει',
+        },
+        plural: {
+          first: 'ουμεν',
+          second: 'ειτε',
+          third: 'ουν',
+        },
+      },
+      aorist: {
+        singular: {
+          first: 'ησα',
+          second: 'ησας',
+          third: 'ησεν',
+        },
+        plural: {
+          first: 'ησαμεν',
+          second: 'ησατε',
+          third: 'ησαν',
+        },
+      },
+      future: {
+        singular: {
+          first: 'ησω',
+          second: 'ησεις',
+          third: 'ησει',
+        },
+        plural: {
+          first: 'ησομεν',
+          second: 'ησετε',
+          third: 'ησουσιν',
+        },
       },
     },
     ending: 'εω',
-  },
-  εἰμι: {
-    example: 'εἰμι',
-    pattern: {
-      singular: {
-        first: 'εἰμι',
-        second: 'εἶ',
-        third: 'ἐστιν',
-      },
-      plural: {
-        first: 'ἐσμεν',
-        second: 'ἐστε',
-        third: 'εἰσιν',
-      },
-    },
-    ending: 'εἰμι',
   },
 };
 

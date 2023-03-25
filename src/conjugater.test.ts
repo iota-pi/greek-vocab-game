@@ -1,7 +1,7 @@
 import { conjugateVerb } from './conjugater';
-import { VerbPerson, WordNumber } from './types';
+import { VerbPerson, VerbTense, WordNumber } from './types';
 
-describe('declineNoun', () => {
+describe('conjugateVerb', () => {
   it.each<[string, VerbPerson, WordNumber, string]>([
     ['λυω', 'first', 'singular', 'λυω'],
     ['λυω', 'second', 'singular', 'λυεις'],
@@ -14,11 +14,38 @@ describe('declineNoun', () => {
     ['εἰμι', 'first', 'singular', 'εἰμι'],
     ['εἰμι', 'second', 'singular', 'εἶ'],
     ['εἰμι', 'first', 'plural', 'ἐσμεν'],
-  ])('declineNoun(%s, %s, %s) = "%s"', (verb, person, number, expected) => {
+  ])('%s, %s, %s, %s = "%s"', (verb, person, number, expected) => {
     const result = conjugateVerb({
-      verb,
-      person,
       number,
+      person,
+      tense: 'present',
+      verb,
+    });
+    expect(result).toEqual(expected);
+  });
+
+  it.each<[string, VerbTense, VerbPerson, WordNumber, string]>([
+    ['λυω', 'imperfect', 'first', 'singular', 'ἐλυον'],
+    ['λυω', 'imperfect', 'second', 'singular', 'ἐλυες'],
+    ['λυω', 'aorist', 'third', 'singular', 'ἐλυσεν'],
+    ['ἐσθιω', 'imperfect', 'first', 'plural', 'ἠσθιομεν'],
+    ['εὑρισκω', 'aorist', 'second', 'plural', 'ηὑρισξατε'],
+    ['ἐχω', 'imperfect', 'third', 'plural', 'εἰχον'],
+    ['ἐχω', 'aorist', 'third', 'plural', 'εἰξαν'],
+    ['ποιεω', 'imperfect', 'first', 'singular', 'ἐποιουν'],
+    ['ποιεω', 'aorist', 'first', 'plural', 'ἐποιησαμεν'],
+    ['καλεω', 'aorist', 'first', 'singular', 'ἐκαλεσα'],
+    ['ἀκολoυθεω', 'imperfect', 'first', 'plural', 'ἠκολoυθουμεν'],
+    ['εἰμι', 'imperfect', 'first', 'singular', 'ἠμεν'],
+    ['παρακαλεω', 'imperfect', 'first', 'singular', 'παρεκαλουν'],
+    ['διακονεω', 'imperfect', 'first', 'plural', 'διηκονουμεν'],
+    ['ὑπαγω', 'imperfect', 'second', 'singular', 'ὑπηγες'],
+  ])('%s, %s, %s, %s = "%s"', (verb, tense, person, number, expected) => {
+    const result = conjugateVerb({
+      number,
+      person,
+      tense,
+      verb,
     });
     expect(result).toEqual(expected);
   });

@@ -2,12 +2,14 @@ import { ReactNode, useMemo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import MenuPage from './Menu';
 import NounsPage from './Nouns';
-import VerbsPage from './Verbs';
+import PresentVerbsPage from './PresentVerbs';
+import PIAFVerbs from './PIAFVerbs';
 
 export type PageId = (
   | 'menu'
   | 'nouns'
-  | 'verbs'
+  | 'present-verbs'
+  | 'piaf-verbs'
 );
 
 export interface Page {
@@ -31,10 +33,16 @@ export const pages: Page[] = [
     page: <NounsPage />,
   },
   {
-    id: 'verbs',
-    path: '/verbs/',
-    name: 'Verbs',
-    page: <VerbsPage />,
+    id: 'present-verbs',
+    path: '/present-verbs/',
+    name: 'Present Verbs',
+    page: <PresentVerbsPage />,
+  },
+  {
+    id: 'piaf-verbs',
+    path: '/piaf-verbs/',
+    name: 'Pres/Imp/Aor Verbs',
+    page: <PIAFVerbs />,
   },
 ];
 
