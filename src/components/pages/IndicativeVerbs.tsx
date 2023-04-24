@@ -58,7 +58,7 @@ function pickWord(): VerbWithParsing {
   }
 }
 
-function PIAFVerbs() {
+function IndicativeVerbs() {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
@@ -267,7 +267,7 @@ function PIAFVerbs() {
           </>
         ) : (
           <StartGameDialog
-            category="piaf-verbs"
+            category="indicative"
             title="Verb Parsing"
             onStart={handleStart}
             report={report}
@@ -293,4 +293,4 @@ function PIAFVerbs() {
   );
 }
 
-export default PIAFVerbs;
+export default IndicativeVerbs;

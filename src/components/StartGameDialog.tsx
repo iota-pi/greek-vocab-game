@@ -92,6 +92,15 @@ function StartGameDialog<T>({
             </div>
           )}
 
+          {report.length > 0 && (
+            <ReportDisplay
+              report={report}
+              formatter={formatter}
+            />
+          )}
+
+          <Divider />
+
           <HighScores
             category={category}
             canSubmit={report.length > 0}
@@ -103,24 +112,6 @@ function StartGameDialog<T>({
             )}
             total={total}
           />
-
-          <Divider />
-
-          {report.length > 0 && (
-            <>
-              <ReportDisplay
-                report={report}
-                formatter={formatter}
-              />
-
-              <Button
-                variant="outlined"
-                onClick={onStart}
-              >
-                Play again
-              </Button>
-            </>
-          )}
 
           <Button
             size="large"

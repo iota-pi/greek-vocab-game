@@ -11,7 +11,7 @@ const checkCategory = (category: string) => {
   const categories: Record<GameCategory, true> = {
     nouns: true,
     verbs: true,
-    'piaf-verbs': true,
+    indicative: true,
   };
   return categories[category as GameCategory] === true;
 };

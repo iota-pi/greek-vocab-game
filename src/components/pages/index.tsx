@@ -3,13 +3,13 @@ import { Switch, Route } from 'react-router-dom';
 import MenuPage from './Menu';
 import NounsPage from './Nouns';
 import PresentVerbsPage from './PresentVerbs';
-import PIAFVerbs from './PIAFVerbs';
+import IndicativeVerbs from './IndicativeVerbs';
 
 export type PageId = (
   | 'menu'
   | 'nouns'
   | 'present-verbs'
-  | 'piaf-verbs'
+  | 'indicative'
 );
 
 export interface Page {
@@ -39,10 +39,10 @@ export const pages: Page[] = [
     page: <PresentVerbsPage />,
   },
   {
-    id: 'piaf-verbs',
-    path: '/piaf-verbs/',
-    name: 'Pres/Imp/Aor Verbs',
-    page: <PIAFVerbs />,
+    id: 'indicative',
+    path: '/indicative/',
+    name: 'Indicative Verbs',
+    page: <IndicativeVerbs />,
   },
 ];
 

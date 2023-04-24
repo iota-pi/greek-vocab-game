@@ -4,21 +4,15 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { getPage, PageId } from '.';
+import { useMemo } from 'react';
 
+const PAGE_IDS: PageId[] = ['nouns', 'present-verbs', 'indicative'];
 
 function MenuPage() {
   const history = useHistory();
-
-  const goTo = useCallback(
-    (pageId: PageId) => {
-      const page = getPage(pageId);
-      history.push(page.path);
-    },
-    [history],
-  );
+  const pages = useMemo(() => PAGE_IDS.map(getPage), []);
 
   return (
     <Box
@@ -35,29 +29,16 @@ function MenuPage() {
           Select game
         </Typography>
 
-        <Button
-          variant="contained"
-          size="large"
-          onClick={() => goTo('nouns')}
-        >
-          Noun parsing
-        </Button>
-
-        <Button
-          variant="contained"
-          size="large"
-          onClick={() => goTo('present-verbs')}
-        >
-          Present verb parsing
-        </Button>
-
-        <Button
-          variant="contained"
-          size="large"
-          onClick={() => goTo('piaf-verbs')}
-        >
-          Pres/Imp/Aor/Fut verbs
-        </Button>
+        {pages.map(page => (
+          <Button
+            key={page.id}
+            variant="contained"
+            size="large"
+            onClick={() => history.push(page.path)}
+          >
+            {page.name}
+          </Button>
+        ))}
       </Stack>
     </Box>
   );
