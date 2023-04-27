@@ -36,14 +36,14 @@ export type VerbMoodParadigms = (
 );
 export type VerbOverrideParadigms = (
   Partial<Record<
-    VerbMood,
-    Partial<Record<
-      VerbVoice,
-      Partial<Record<
-        VerbTense,
-        VerbParadigmPattern | null
-      >> | null
-    >> | null
+  VerbMood,
+  Partial<Record<
+  VerbVoice,
+  Partial<Record<
+  VerbTense,
+  VerbParadigmPattern | null
+  >> | null
+  >> | null
   >>
 );
 
