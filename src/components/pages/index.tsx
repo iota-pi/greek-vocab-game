@@ -4,12 +4,16 @@ import MenuPage from './Menu';
 import NounsPage from './Nouns';
 import PresentVerbsPage from './PresentVerbs';
 import IndicativeVerbs from './IndicativeVerbs';
+import InfinitiveVerbs from './InfVerbs';
+import ImperativeVerbs from './ImpVerbs';
 
 export type PageId = (
   | 'menu'
   | 'nouns'
   | 'present-verbs'
   | 'indicative'
+  | 'imperative'
+  | 'infinitive'
 );
 
 export interface Page {
@@ -19,13 +23,16 @@ export interface Page {
   page: ReactNode,
 }
 
-export const pages: Page[] = [
+export const functionalPages: Page[] = [
   {
     id: 'menu',
     path: '/',
     name: 'Menu',
     page: <MenuPage />,
   },
+];
+
+export const gamePages: Page[] = [
   {
     id: 'nouns',
     path: '/nouns/',
@@ -44,9 +51,21 @@ export const pages: Page[] = [
     name: 'Indicative Verbs',
     page: <IndicativeVerbs />,
   },
+  {
+    id: 'imperative',
+    path: '/imperative/',
+    name: 'Imperative Verbs',
+    page: <ImperativeVerbs />,
+  },
+  {
+    id: 'infinitive',
+    path: '/infinitive/',
+    name: 'Infinitive Verbs',
+    page: <InfinitiveVerbs />,
+  },
 ];
 
-const allPages = pages.slice().reverse();
+const allPages = [...functionalPages, ...gamePages].reverse();
 
 function PageView() {
   const pageRoutes = useMemo(

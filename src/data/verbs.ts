@@ -1,46 +1,53 @@
-import type { VerbTense, VerbTenseParadigms } from '../types';
+import type { VerbOverrideParadigms, VerbTense } from '../types';
+import { applyWeightings } from '../util';
 
 export type VerbData = {
   lexical: string,
   word: string,
-  overwrites?: Partial<VerbTenseParadigms>,
+  overrides?: VerbOverrideParadigms,
   omit?: VerbTense[],
   preposition?: string,
   weight?: number,
+  uniqueParadigm?: boolean,
 };
 
 const rawVerbs: VerbData[] = [
   {
     word: 'εἰμι',
     lexical: 'εἰμι',
-    overwrites: {
-      present: {
-        singular: {
-          first: 'εἰμι',
-          second: 'εἶ',
-          third: 'ἐστιν',
-        },
-        plural: {
-          first: 'ἐσμεν',
-          second: 'ἐστε',
-          third: 'εἰσιν',
-        },
-      },
-      imperfect: {
-        singular: {
-          first: 'ἠμεν',
-          second: 'ἠς|ἠσθα',
-          third: 'ἠν',
-        },
-        plural: {
-          first: 'ἠμεν|ἠμεθα',
-          second: 'ἠτε',
-          third: 'ἠσαν',
+    overrides: {
+      indicative: {
+        active: {
+          present: {
+            singular: {
+              first: 'εἰμι',
+              second: 'εἶ',
+              third: 'ἐστιν',
+            },
+            plural: {
+              first: 'ἐσμεν',
+              second: 'ἐστε',
+              third: 'εἰσιν',
+            },
+          },
+          imperfect: {
+            singular: {
+              first: 'ἠμεν',
+              second: 'ἠς|ἠσθα',
+              third: 'ἠν',
+            },
+            plural: {
+              first: 'ἠμεν|ἠμεθα',
+              second: 'ἠτε',
+              third: 'ἠσαν',
+            },
+          },
         },
       },
     },
     omit: ['aorist'],
     weight: 2,
+    uniqueParadigm: true,
   },
   {
     word: 'λυω',
@@ -57,17 +64,21 @@ const rawVerbs: VerbData[] = [
   {
     word: 'εὑρισκω',
     lexical: 'εὑρισκω',
-    overwrites: {
-      future: {
-        singular: {
-          first: 'εὑρησω',
-          second: 'εὑρησεις',
-          third: 'εὑρησει',
-        },
-        plural: {
-          first: 'εὑρησομεν',
-          second: 'εὑρησετε',
-          third: 'εὑρησουσιν',
+    overrides: {
+      indicative: {
+        active: {
+          future: {
+            singular: {
+              first: 'εὑρησω',
+              second: 'εὑρησεις',
+              third: 'εὑρησει',
+            },
+            plural: {
+              first: 'εὑρησομεν',
+              second: 'εὑρησετε',
+              third: 'εὑρησουσιν',
+            },
+          },
         },
       },
     },
@@ -75,41 +86,45 @@ const rawVerbs: VerbData[] = [
   {
     word: 'ἐχω',
     lexical: 'ἐχω',
-    overwrites: {
-      imperfect: {
-        singular: {
-          first: 'εἰχον',
-          second: 'εἰχες',
-          third: 'εἰχεν',
-        },
-        plural: {
-          first: 'εἰχομεν',
-          second: 'εἰχετε',
-          third: 'εἰχον',
-        },
-      },
-      aorist: {
-        singular: {
-          first: 'εἰξα',
-          second: 'εἰξες',
-          third: 'εἰξεν',
-        },
-        plural: {
-          first: 'εἰξαμεν',
-          second: 'εἰξατε',
-          third: 'εἰξαν',
-        },
-      },
-      future: {
-        singular: {
-          first: 'ἑξω',
-          second: 'ἑξεις',
-          third: 'ἑξει',
-        },
-        plural: {
-          first: 'ἑξομεν',
-          second: 'ἑξετε',
-          third: 'ἑξουσιν',
+    overrides: {
+      indicative: {
+        active: {
+          imperfect: {
+            singular: {
+              first: 'εἰχον',
+              second: 'εἰχες',
+              third: 'εἰχεν',
+            },
+            plural: {
+              first: 'εἰχομεν',
+              second: 'εἰχετε',
+              third: 'εἰχον',
+            },
+          },
+          aorist: {
+            singular: {
+              first: 'εἰξα',
+              second: 'εἰξες',
+              third: 'εἰξεν',
+            },
+            plural: {
+              first: 'εἰξαμεν',
+              second: 'εἰξατε',
+              third: 'εἰξαν',
+            },
+          },
+          future: {
+            singular: {
+              first: 'ἑξω',
+              second: 'ἑξεις',
+              third: 'ἑξει',
+            },
+            plural: {
+              first: 'ἑξομεν',
+              second: 'ἑξετε',
+              third: 'ἑξουσιν',
+            },
+          },
         },
       },
     },
@@ -117,29 +132,33 @@ const rawVerbs: VerbData[] = [
   {
     word: 'θελω',
     lexical: 'θελω',
-    overwrites: {
-      imperfect: {
-        singular: {
-          first: 'ἠθελον',
-          second: 'ἠθελες',
-          third: 'ἠθελεν',
-        },
-        plural: {
-          first: 'ἠθελομεν',
-          second: 'ἠθελετε',
-          third: 'ἠθελον',
-        },
-      },
-      aorist: {
-        singular: {
-          first: 'ἠθελσα',
-          second: 'ἠθελσας',
-          third: 'ἠθελσεν',
-        },
-        plural: {
-          first: 'ἠθελσαμεν',
-          second: 'ἠθελσατε',
-          third: 'ἠθελσαν',
+    overrides: {
+      indicative: {
+        active: {
+          imperfect: {
+            singular: {
+              first: 'ἠθελον',
+              second: 'ἠθελες',
+              third: 'ἠθελεν',
+            },
+            plural: {
+              first: 'ἠθελομεν',
+              second: 'ἠθελετε',
+              third: 'ἠθελον',
+            },
+          },
+          aorist: {
+            singular: {
+              first: 'ἠθελσα',
+              second: 'ἠθελσας',
+              third: 'ἠθελσεν',
+            },
+            plural: {
+              first: 'ἠθελσαμεν',
+              second: 'ἠθελσατε',
+              third: 'ἠθελσαν',
+            },
+          },
         },
       },
     },
@@ -147,17 +166,21 @@ const rawVerbs: VerbData[] = [
   {
     word: 'λεγω',
     lexical: 'λεγω',
-    overwrites: {
-      future: {
-        singular: {
-          first: 'ἐρω',
-          second: 'ἐρεις',
-          third: 'ἐρει',
-        },
-        plural: {
-          first: 'ἐρομεν',
-          second: 'ἐρετε',
-          third: 'ἐρουσιν',
+    overrides: {
+      indicative: {
+        active: {
+          future: {
+            singular: {
+              first: 'ἐρω',
+              second: 'ἐρεις',
+              third: 'ἐρει',
+            },
+            plural: {
+              first: 'ἐρομεν',
+              second: 'ἐρετε',
+              third: 'ἐρουσιν',
+            },
+          },
         },
       },
     },
@@ -177,29 +200,33 @@ const rawVerbs: VerbData[] = [
   {
     word: 'καλεω',
     lexical: 'καλεω',
-    overwrites: {
-      aorist: {
-        singular: {
-          first: 'ἐκαλεσα',
-          second: 'ἐκαλεσας',
-          third: 'ἐκαλεσεν',
-        },
-        plural: {
-          first: 'ἐκαλεσαμεν',
-          second: 'ἐκαλεσατε',
-          third: 'ἐκαλεσαν',
-        },
-      },
-      future: {
-        singular: {
-          first: 'καλεσω',
-          second: 'καλεσεις',
-          third: 'καλεσει',
-        },
-        plural: {
-          first: 'καλεσομεν',
-          second: 'καλεσετε',
-          third: 'καλεσουσιν',
+    overrides: {
+      indicative: {
+        active: {
+          aorist: {
+            singular: {
+              first: 'ἐκαλεσα',
+              second: 'ἐκαλεσας',
+              third: 'ἐκαλεσεν',
+            },
+            plural: {
+              first: 'ἐκαλεσαμεν',
+              second: 'ἐκαλεσατε',
+              third: 'ἐκαλεσαν',
+            },
+          },
+          future: {
+            singular: {
+              first: 'καλεσω',
+              second: 'καλεσεις',
+              third: 'καλεσει',
+            },
+            plural: {
+              first: 'καλεσομεν',
+              second: 'καλεσετε',
+              third: 'καλεσουσιν',
+            },
+          },
         },
       },
     },
@@ -223,29 +250,33 @@ const rawVerbs: VerbData[] = [
   {
     word: 'φερω',
     lexical: 'φερω',
-    overwrites: {
-      aorist: {
-        singular: {
-          first: 'ἠνεγκα',
-          second: 'ἠνεγκασ',
-          third: 'ἠνεγκεν',
-        },
-        plural: {
-          first: 'ἠνεγκαμεν',
-          second: 'ἠνεγκατε',
-          third: 'ἠνεγκαν',
-        },
-      },
-      future: {
-        singular: {
-          first: 'οἰσω',
-          second: 'οἰσεις',
-          third: 'οἰσει',
-        },
-        plural: {
-          first: 'οἰσομεν',
-          second: 'οἰσετε',
-          third: 'οἰσουσιν',
+    overrides: {
+      indicative: {
+        active: {
+          aorist: {
+            singular: {
+              first: 'ἠνεγκα',
+              second: 'ἠνεγκασ',
+              third: 'ἠνεγκεν',
+            },
+            plural: {
+              first: 'ἠνεγκαμεν',
+              second: 'ἠνεγκατε',
+              third: 'ἠνεγκαν',
+            },
+          },
+          future: {
+            singular: {
+              first: 'οἰσω',
+              second: 'οἰσεις',
+              third: 'οἰσει',
+            },
+            plural: {
+              first: 'οἰσομεν',
+              second: 'οἰσετε',
+              third: 'οἰσουσιν',
+            },
+          },
         },
       },
     },
@@ -253,29 +284,33 @@ const rawVerbs: VerbData[] = [
   {
     word: 'σῳζω',
     lexical: 'σῳζω',
-    overwrites: {
-      aorist: {
-        singular: {
-          first: 'ἐσωσα',
-          second: 'ἐσωσασ',
-          third: 'ἐσωσεν',
-        },
-        plural: {
-          first: 'ἐσωσαμεν',
-          second: 'ἐσωσατε',
-          third: 'ἐσωσαν',
-        },
-      },
-      future: {
-        singular: {
-          first: 'σωσω',
-          second: 'σωσεις',
-          third: 'σωσει',
-        },
-        plural: {
-          first: 'σωσομεν',
-          second: 'σωσετε',
-          third: 'σωσουσιν',
+    overrides: {
+      indicative: {
+        active: {
+          aorist: {
+            singular: {
+              first: 'ἐσωσα',
+              second: 'ἐσωσασ',
+              third: 'ἐσωσεν',
+            },
+            plural: {
+              first: 'ἐσωσαμεν',
+              second: 'ἐσωσατε',
+              third: 'ἐσωσαν',
+            },
+          },
+          future: {
+            singular: {
+              first: 'σωσω',
+              second: 'σωσεις',
+              third: 'σωσει',
+            },
+            plural: {
+              first: 'σωσομεν',
+              second: 'σωσετε',
+              third: 'σωσουσιν',
+            },
+          },
         },
       },
     },
@@ -312,6 +347,6 @@ const rawVerbs: VerbData[] = [
   },
 ];
 
-const verbs = rawVerbs.flatMap(v => new Array<typeof v>(v.weight ?? 1).fill(v));
+const verbs = applyWeightings(rawVerbs);
 
 export default verbs;

@@ -1,35 +1,55 @@
 import paradigms, { type VerbEnding } from './data/verbParadigms';
 import verbs, { VerbData } from './data/verbs';
-import type { VerbPerson, VerbTense, WordNumber } from './types';
+import type { VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
 
 export function conjugateVerb({
+  mood,
   number,
   person,
   tense,
   verb,
+  voice,
 }: {
+  mood: VerbMood,
   number: WordNumber,
   person: VerbPerson,
   tense: VerbTense,
   verb: string,
+  voice: VerbVoice,
 }) {
   const data = getVerbData(verb);
-  const overwrite = data.overwrites?.[tense]?.[number]?.[person];
-  if (overwrite) {
-    return overwrite;
+  const override = data.overrides?.[mood]?.[voice]?.[tense]?.[number]?.[person];
+  if (override) {
+    return override;
   }
   if (data.omit?.includes(tense)) {
     throw new Error(`Cannot conjugate ${verb} with ${tense} tense`);
+  }
+  if (data.uniqueParadigm) {
+    return null;
   }
 
   const paradigm = getParadigm(verb);
   const ending = getEnding(verb);
   const preposition = getPreposition(data);
   const stem = verb.slice(preposition.length, verb.length - ending.length);
-  const augmentedStem = applyAugment(preposition, stem, tense);
-  const paradigmForTense = paradigm.tenses[tense];
-  const newEnding = paradigmForTense[number][person];
-  const result = applyEnding(augmentedStem, newEnding);
+  const augmentedStem = applyAugment(preposition, stem, tense, mood);
+  const paradigmForTense = paradigm.moods[mood]?.[voice]?.[tense];
+  if (!paradigmForTense) {
+    return null;
+  }
+
+  let conjugatedEnding: string | null;
+  if (typeof paradigmForTense === 'string') {
+    conjugatedEnding = paradigmForTense;
+  } else {
+    conjugatedEnding = paradigmForTense[number][person];
+  }
+  if (!conjugatedEnding) {
+    return null;
+  }
+
+  const result = applyEnding(augmentedStem, conjugatedEnding);
   return result;
 }
 
@@ -40,7 +60,8 @@ export function getParadigm(verb: string) {
 }
 
 export function getEnding(verb: string) {
-  const endings: VerbEnding[] = ['εω', 'ω'];
+  // const endings: VerbEnding[] = ['εω', 'ω'];
+  const endings: VerbEnding[] = ['ω'];
   for (const ending of endings) {
     if (verb.endsWith(ending)) {
       return ending;
@@ -60,11 +81,22 @@ export function applyEnding(stem: string, ending: string) {
       .replace(new RegExp(`[κγχ]${x}σ`), `ξ${x}`)
       .replace(new RegExp(`[πβφ]${x}σ`), `ψ${x}`)
       .replace(new RegExp(`[τδθ]${x}σ`), `σ${x}`)
+      .replace(new RegExp(`ε${x}σ`), `${x}ησ`)
+      .replace(new RegExp(`ε${x}ε(?![ιυ])`), `${x}ει`)
+      .replace(new RegExp(`ε${x}ει`), `${x}ει`)
+      .replace(new RegExp(`ε${x}ο(?![ιυ])`), `${x}ου`)
+      .replace(new RegExp(`ε${x}ου`), `${x}ου`)
+      .replace(new RegExp(`ε${x}ω`), `${x}ω`)
+      .replace(new RegExp(`ε${x}η(?!υ)`), `${x}η`)
       .replaceAll(x, '')
   );
 }
 
-export function getAugment(tense: VerbTense) {
+export function getAugment(tense: VerbTense, mood: VerbMood) {
+  if (mood !== 'indicative') {
+    return '';
+  }
+
   const map: Record<VerbTense, string> = {
     aorist: 'ἐ',
     imperfect: 'ἐ',
@@ -74,9 +106,9 @@ export function getAugment(tense: VerbTense) {
   return map[tense];
 }
 
-export function applyAugment(preposition: string, stem: string, tense: VerbTense) {
+export function applyAugment(preposition: string, stem: string, tense: VerbTense, mood: VerbMood) {
   const x = '!!!!';
-  const augment = getAugment(tense);
+  const augment = getAugment(tense, mood);
   const modifiedPreposition = !augment ? preposition : (
     preposition
       .replace(/ἐκ/, 'ἐξ')

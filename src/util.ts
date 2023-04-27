@@ -1,4 +1,4 @@
-import { Gender, NounCase, VerbPerson, VerbTense, WordNumber } from './types';
+import { Gender, NounCase, VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
 
 export const API_ENDPOINT = (
   'https://s46ipfbb5e.execute-api.ap-southeast-2.amazonaws.com/production'
@@ -74,6 +74,25 @@ export function getTenseName(tense: VerbTense) {
   return mapping[tense];
 }
 
+export function getMoodName(mood: VerbMood) {
+  const mapping: Record<VerbMood, string> = {
+    imperative: 'Imperative',
+    indicative: 'Indicative',
+    infinitive: 'Infinitive',
+    participle: 'Participle',
+    subjunctive: 'Subjunctive',
+  };
+  return mapping[mood];
+}
+
+export function getVoiceName(voice: VerbVoice) {
+  const mapping: Record<VerbVoice, string> = {
+    active: 'Active',
+    middle: 'Middle',
+  };
+  return mapping[voice];
+}
+
 export function splitTime(time: number) {
   const ms = time % 1000;
   const s = Math.floor(time / 1000) % 60;
@@ -86,4 +105,8 @@ export function formatTime(time: { m: number, ms: number, s: number }) {
   const s = time.s.toString().padStart(2, '0');
   const ms = Math.floor(time.ms / 10).toString().padStart(2, '0');
   return `${m}:${s}.${ms}`;
+}
+
+export function applyWeightings<T extends { weight?: number }>(data: T[]) {
+  return data.flatMap(x => new Array<T>(x.weight ?? 1).fill(x));
 }

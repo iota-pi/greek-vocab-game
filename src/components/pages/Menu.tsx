@@ -5,14 +5,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useHistory } from 'react-router-dom';
-import { getPage, PageId } from '.';
-import { useMemo } from 'react';
+import { gamePages } from '.';
 
-const PAGE_IDS: PageId[] = ['nouns', 'present-verbs', 'indicative'];
 
 function MenuPage() {
   const history = useHistory();
-  const pages = useMemo(() => PAGE_IDS.map(getPage), []);
 
   return (
     <Box
@@ -29,7 +26,7 @@ function MenuPage() {
           Select game
         </Typography>
 
-        {pages.map(page => (
+        {gamePages.map(page => (
           <Button
             key={page.id}
             variant="contained"

@@ -36,14 +36,29 @@ function pickWord(): VerbWithParsing {
   const person = PERSONS[Math.floor(Math.random() * PERSONS.length)];
   const number = NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
   const tense = 'present';
+  const mood = 'indicative';
+  const voice = 'active';
   try {
-    const word = conjugateVerb({ verb: verb.word, person, number, tense });
-    return {
-      word,
-      lexical: verb.word,
-      person,
+    const word = conjugateVerb({
+      mood,
       number,
+      person,
       tense,
+      verb: verb.word,
+      voice,
+    });
+    if (word === null) {
+      return pickWord();
+    }
+
+    return {
+      lexical: verb.word,
+      mood,
+      number,
+      person,
+      tense,
+      voice,
+      word,
     };
   } catch (error) {
     // Log error and re-attempt
@@ -83,12 +98,17 @@ function PresentVerbs() {
   const checkAnswer = useCallback(
     (person: VerbPerson, number: WordNumber) => {
       const tense = 'present';
+      const mood = 'indicative';
+      const voice = 'active';
+
       let correct = false;
       const declinedGuess = conjugateVerb({
-        verb: currentWord.lexical,
-        tense,
-        person,
+        mood,
         number,
+        person,
+        tense,
+        verb: currentWord.lexical,
+        voice,
       });
       if (declinedGuess === currentWord.word) {
         correct = true;
@@ -105,8 +125,10 @@ function PresentVerbs() {
         expected: { ...currentWord },
         given: {
           person,
+          mood,
           number,
           tense,
+          voice,
         },
       };
       setReport(r => [...r, newReport]);

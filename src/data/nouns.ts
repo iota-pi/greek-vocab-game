@@ -1,4 +1,5 @@
 import { Article } from '../types';
+import { applyWeightings } from '../util';
 
 type NounData = {
   lexical: string,
@@ -6,9 +7,10 @@ type NounData = {
   genitive: string,
   article: Article,
   singular?: boolean,
+  weight?: number,
 };
 
-const nouns: NounData[] = [
+const rawNouns: NounData[] = [
   {
     lexical: 'ἀγγελος, ου, ὁ',
     word: 'ἀγγελος',
@@ -227,24 +229,14 @@ const nouns: NounData[] = [
     word: 'ὁδος',
     genitive: 'ου',
     article: 'ἡ',
-  },
-  {
-    lexical: 'ὁδος, ου, ἡ',
-    word: 'ὁδος',
-    genitive: 'ου',
-    article: 'ἡ',
+    weight: 2,
   },
   {
     lexical: 'προφητης, ου, ὁ',
     word: 'προφητης',
     genitive: 'ου',
     article: 'ὁ',
-  },
-  {
-    lexical: 'προφητης, ου, ὁ',
-    word: 'προφητης',
-    genitive: 'ου',
-    article: 'ὁ',
+    weight: 2,
   },
   {
     lexical: 'ἁμαρτια, ας, ἡ',
@@ -343,5 +335,7 @@ const nouns: NounData[] = [
     article: 'ἡ',
   },
 ];
+
+const nouns = applyWeightings(rawNouns);
 
 export default nouns;

@@ -1,5 +1,5 @@
 import { conjugateVerb } from './conjugater';
-import { VerbPerson, VerbTense, WordNumber } from './types';
+import { VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
 
 describe('conjugateVerb', () => {
   it.each<[string, VerbPerson, WordNumber, string]>([
@@ -19,33 +19,45 @@ describe('conjugateVerb', () => {
       number,
       person,
       tense: 'present',
+      voice: 'active',
+      mood: 'indicative',
       verb,
     });
     expect(result).toEqual(expected);
   });
 
-  it.each<[string, VerbTense, VerbPerson, WordNumber, string]>([
-    ['λυω', 'imperfect', 'first', 'singular', 'ἐλυον'],
-    ['λυω', 'imperfect', 'second', 'singular', 'ἐλυες'],
-    ['λυω', 'aorist', 'third', 'singular', 'ἐλυσεν'],
-    ['ἐσθιω', 'imperfect', 'first', 'plural', 'ἠσθιομεν'],
-    ['εὑρισκω', 'aorist', 'second', 'plural', 'ηὑρισξατε'],
-    ['ἐχω', 'imperfect', 'third', 'plural', 'εἰχον'],
-    ['ἐχω', 'aorist', 'third', 'plural', 'εἰξαν'],
-    ['ποιεω', 'imperfect', 'first', 'singular', 'ἐποιουν'],
-    ['ποιεω', 'aorist', 'first', 'plural', 'ἐποιησαμεν'],
-    ['καλεω', 'aorist', 'first', 'singular', 'ἐκαλεσα'],
-    ['ἀκολoυθεω', 'imperfect', 'first', 'plural', 'ἠκολoυθουμεν'],
-    ['εἰμι', 'imperfect', 'first', 'singular', 'ἠμεν'],
-    ['παρακαλεω', 'imperfect', 'first', 'singular', 'παρεκαλουν'],
-    ['διακονεω', 'imperfect', 'first', 'plural', 'διηκονουμεν'],
-    ['ὑπαγω', 'imperfect', 'second', 'singular', 'ὑπηγες'],
-  ])('%s, %s, %s, %s = "%s"', (verb, tense, person, number, expected) => {
+  it.each<[string, VerbTense, VerbVoice, VerbMood, VerbPerson, WordNumber, string | null]>([
+    ['λυω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἐλυον'],
+    ['λυω', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ἐλυες'],
+    ['λυω', 'aorist', 'active', 'indicative', 'third', 'singular', 'ἐλυσεν'],
+    ['ἐσθιω', 'imperfect', 'active', 'indicative', 'first', 'plural', 'ἠσθιομεν'],
+    ['εὑρισκω', 'aorist', 'active', 'indicative', 'second', 'plural', 'ηὑρισξατε'],
+    ['ἐχω', 'imperfect', 'active', 'indicative', 'third', 'plural', 'εἰχον'],
+    ['ἐχω', 'aorist', 'active', 'indicative', 'third', 'plural', 'εἰξαν'],
+    ['ποιεω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἐποιουν'],
+    ['ποιεω', 'aorist', 'active', 'indicative', 'first', 'plural', 'ἐποιησαμεν'],
+    ['καλεω', 'aorist', 'active', 'indicative', 'first', 'singular', 'ἐκαλεσα'],
+    ['ἀκολoυθεω', 'imperfect', 'active', 'indicative', 'first', 'plural', 'ἠκολoυθουμεν'],
+    ['εἰμι', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἠμεν'],
+    ['παρακαλεω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'παρεκαλουν'],
+    ['διακονεω', 'imperfect', 'active', 'indicative', 'first', 'plural', 'διηκονουμεν'],
+    ['ὑπαγω', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ὑπηγες'],
+    ['λυω', 'present', 'active', 'imperative', 'first', 'singular', null],
+    ['λυω', 'present', 'active', 'imperative', 'second', 'singular', 'λυε'],
+    ['ὑπαγω', 'aorist', 'middle', 'imperative', 'third', 'plural', 'ὑπαξασθωσαν'],
+    ['λυω', 'aorist', 'active', 'infinitive', 'first', 'plural', 'λυσαι'],
+    ['λυω', 'aorist', 'middle', 'infinitive', 'first', 'plural', 'λυσασθαι'],
+    ['λυω', 'future', 'middle', 'infinitive', 'first', 'plural', null],
+    ['φωνεω', 'present', 'middle', 'imperative', 'second', 'singular', 'φωνου'],
+    ['εἰμι', 'present', 'active', 'imperative', 'first', 'singular', null],
+  ])('%s, %s, %s, %s = "%s"', (verb, tense, voice, mood, person, number, expected) => {
     const result = conjugateVerb({
+      mood,
       number,
       person,
       tense,
       verb,
+      voice,
     });
     expect(result).toEqual(expected);
   });

@@ -16,15 +16,20 @@ import type {
   WordNumber,
   VerbParsing,
   VerbTense,
+  VerbMood,
+  VerbVoice,
 } from '../../types';
-import { getNumberName, getPersonName, getTenseName } from '../../util';
+import { getNumberName, getPersonName, getTenseName, getVoiceName } from '../../util';
 import Timer from '../Timer';
 import StartGameDialog from '../StartGameDialog';
 import { conjugateVerb } from '../../conjugater';
 
-const PERSONS: VerbPerson[] = ['first', 'second', 'third'];
+const PERSONS: VerbPerson[] = ['second', 'third'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const TENSES: VerbTense[] = ['present', 'imperfect', 'aorist', 'future'];
+const TENSES: VerbTense[] = ['present', 'aorist'];
+const VOICES: VerbVoice[] = ['active', 'middle'];
+
+const mood: VerbMood = 'imperative';
 
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 80;
@@ -39,13 +44,13 @@ function pickWord(): VerbWithParsing {
   const number = NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
   const validTenses = TENSES.filter(t => !verb.omit?.includes(t));
   const tense = validTenses[Math.floor(Math.random() * validTenses.length)];
-  const mood = 'indicative';
-  const voice = 'active';
+  const voice = VOICES[Math.floor(Math.random() * VOICES.length)];
+
   try {
     const word = conjugateVerb({
+      person,
       mood,
       number,
-      person,
       tense,
       verb: verb.word,
       voice,
@@ -56,9 +61,9 @@ function pickWord(): VerbWithParsing {
 
     return {
       lexical: verb.word,
+      person,
       mood,
       number,
-      person,
       tense,
       voice,
       word,
@@ -73,7 +78,7 @@ function pickWord(): VerbWithParsing {
   }
 }
 
-function IndicativeVerbs() {
+function ImperativeVerbs() {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
@@ -99,17 +104,19 @@ function IndicativeVerbs() {
   );
 
   const checkAnswer = useCallback(
-    (tense: VerbTense, person: VerbPerson, number: WordNumber) => {
-      const mood = 'indicative';
-      const voice = 'active';
-
+    ({ number, person, tense, voice } : {
+      number: WordNumber,
+      person: VerbPerson,
+      tense: VerbTense,
+      voice: VerbVoice,
+    }) => {
       let correct = false;
       const declinedGuess = conjugateVerb({
-        verb: currentWord.lexical,
         mood,
         number,
         person,
         tense,
+        verb: currentWord.lexical,
         voice,
       });
       if (declinedGuess === currentWord.word) {
@@ -126,8 +133,8 @@ function IndicativeVerbs() {
         correct,
         expected: { ...currentWord },
         given: {
-          person,
           mood,
+          person,
           number,
           tense,
           voice,
@@ -219,21 +226,29 @@ function IndicativeVerbs() {
                 <Box minWidth={firstColWidth} />
 
                 {TENSES.map(tense => (
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    justifyContent="center"
-                    minWidth={colWidth}
-                    key={tense}
-                  >
-                    <strong>
-                      {(
-                        sm
-                          ? `${getTenseName(tense).slice(0, 4).replace(/i$/, '')}.`
-                          : getTenseName(tense)
-                      )}
-                    </strong>
-                  </Box>
+                  VOICES.map(voice => (
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      justifyContent="center"
+                      minWidth={colWidth}
+                      key={`${tense} ${voice}`}
+                    >
+                      <strong>
+                        {(
+                          sm
+                            ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
+                            : getTenseName(tense)
+                        )}
+                        <br />
+                        {(
+                          sm
+                            ? `${getVoiceName(voice).slice(0, 3)}.`
+                            : getVoiceName(voice)
+                        )}
+                      </strong>
+                    </Box>
+                  ))
                 ))}
               </Stack>
 
@@ -264,22 +279,24 @@ function IndicativeVerbs() {
                           )}
                         </Box>
 
-                        {TENSES.map(tense => {
-                          const innerKey = `${key}-${tense}`;
-                          return (
-                            <Button
-                              key={innerKey}
-                              onClick={() => checkAnswer(tense, person, number)}
-                              size="large"
-                              sx={{
-                                minWidth: colWidth,
-                              }}
-                              variant="outlined"
-                            >
-                              {sm ? personName.slice(0, 3) : personName}
-                            </Button>
-                          );
-                        })}
+                        {TENSES.map(tense => (
+                          VOICES.map(voice => {
+                            const innerKey = `${key}-${tense}-${voice}`;
+                            return (
+                              <Button
+                                key={innerKey}
+                                onClick={() => checkAnswer({ number, person, tense, voice })}
+                                size="large"
+                                sx={{
+                                  minWidth: colWidth,
+                                }}
+                                variant="outlined"
+                              >
+                                {sm ? personName.slice(0, 3) : personName}
+                              </Button>
+                            );
+                          })
+                        ))}
                       </Stack>
                     );
                   })}
@@ -289,8 +306,8 @@ function IndicativeVerbs() {
           </>
         ) : (
           <StartGameDialog
-            category="indicative"
-            title="Indicative Verb Parsing"
+            category="imperative"
+            title="Imperative Verb Parsing"
             onStart={handleStart}
             report={report}
             endTime={endTime}
@@ -315,4 +332,4 @@ function IndicativeVerbs() {
   );
 }
 
-export default IndicativeVerbs;
+export default ImperativeVerbs;
