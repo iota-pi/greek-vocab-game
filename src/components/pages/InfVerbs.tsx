@@ -19,7 +19,7 @@ import type {
   VerbMood,
   VerbVoice,
 } from '../../types';
-import { getNumberName, getPersonName, getTenseName, getVoiceName } from '../../util';
+import { getTenseName, getVoiceName } from '../../util';
 import Timer from '../Timer';
 import StartGameDialog from '../StartGameDialog';
 import { conjugateVerb } from '../../conjugater';
@@ -297,8 +297,7 @@ function InfinitiveVerbs() {
               parsing => (
                 [
                   getTenseName(parsing.tense),
-                  getPersonName(parsing.person),
-                  getNumberName(parsing.number),
+                  getVoiceName(parsing.voice),
                 ].join(' ')
               )
             )}

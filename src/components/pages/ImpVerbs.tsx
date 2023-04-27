@@ -316,6 +316,7 @@ function ImperativeVerbs() {
               parsing => (
                 [
                   getTenseName(parsing.tense),
+                  getVoiceName(parsing.voice),
                   getPersonName(parsing.person),
                   getNumberName(parsing.number),
                 ].join(' ')
