@@ -12,6 +12,8 @@ const checkCategory = (category: string) => {
     nouns: true,
     verbs: true,
     indicative: true,
+    imperative: true,
+    infinitive: true,
   };
   return categories[category as GameCategory] === true;
 };
