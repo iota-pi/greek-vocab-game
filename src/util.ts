@@ -93,6 +93,14 @@ export function getVoiceName(voice: VerbVoice) {
   return mapping[voice];
 }
 
+export function getShortVoiceName(voice: VerbVoice) {
+  const mapping: Record<VerbVoice, string> = {
+    active: 'Act',
+    middle: 'M/P',
+  };
+  return mapping[voice];
+}
+
 export function splitTime(time: number) {
   const ms = time % 1000;
   const s = Math.floor(time / 1000) % 60;

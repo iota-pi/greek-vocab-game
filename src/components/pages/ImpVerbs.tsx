@@ -19,7 +19,7 @@ import type {
   VerbMood,
   VerbVoice,
 } from '../../types';
-import { getNumberName, getPersonName, getTenseName, getVoiceName } from '../../util';
+import { getNumberName, getPersonName, getShortVoiceName, getTenseName, getVoiceName } from '../../util';
 import Timer from '../Timer';
 import StartGameDialog from '../StartGameDialog';
 import { conjugateVerb } from '../../conjugater';
@@ -230,23 +230,23 @@ function ImperativeVerbs() {
                     <Box
                       alignItems="center"
                       display="flex"
+                      fontWeight={700}
                       justifyContent="center"
-                      minWidth={colWidth}
                       key={`${tense} ${voice}`}
+                      minWidth={colWidth}
+                      textAlign="center"
                     >
-                      <strong>
-                        {(
-                          sm
-                            ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
-                            : getTenseName(tense)
-                        )}
-                        <br />
-                        {(
-                          sm
-                            ? `${getVoiceName(voice).slice(0, 3)}.`
-                            : getVoiceName(voice)
-                        )}
-                      </strong>
+                      {(
+                        sm
+                          ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
+                          : getTenseName(tense)
+                      )}
+                      <br />
+                      {(
+                        sm
+                          ? `${getShortVoiceName(voice)}`
+                          : getVoiceName(voice)
+                      )}
                     </Box>
                   ))
                 ))}

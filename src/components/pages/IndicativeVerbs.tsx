@@ -222,17 +222,17 @@ function IndicativeVerbs() {
                   <Box
                     alignItems="center"
                     display="flex"
+                    fontWeight={700}
                     justifyContent="center"
-                    minWidth={colWidth}
                     key={tense}
+                    minWidth={colWidth}
+                    textAlign="center"
                   >
-                    <strong>
-                      {(
-                        sm
-                          ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
-                          : getTenseName(tense)
-                      )}
-                    </strong>
+                    {(
+                      sm
+                        ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
+                        : getTenseName(tense)
+                    )}
                   </Box>
                 ))}
               </Stack>

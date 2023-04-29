@@ -19,7 +19,7 @@ import type {
   VerbMood,
   VerbVoice,
 } from '../../types';
-import { getTenseName, getVoiceName } from '../../util';
+import { getShortVoiceName, getTenseName, getVoiceName } from '../../util';
 import Timer from '../Timer';
 import StartGameDialog from '../StartGameDialog';
 import { conjugateVerb } from '../../conjugater';
@@ -225,23 +225,23 @@ function InfinitiveVerbs() {
                   <Box
                     alignItems="center"
                     display="flex"
+                    fontWeight={700}
                     justifyContent="center"
-                    minWidth={colWidth}
                     key={tense}
+                    minWidth={colWidth}
+                    textAlign="center"
                   >
-                    <strong>
-                      {(
-                        sm
-                          ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
-                          : getTenseName(tense)
-                      )}
-                    </strong>
+                    {(
+                      sm
+                        ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
+                        : getTenseName(tense)
+                    )}
                   </Box>
                 ))}
               </Stack>
 
               {VOICES.map((voice, i) => {
-                const voiceName = getVoiceName(voice);
+                const voiceName = sm ? getShortVoiceName(voice) : getVoiceName(voice);
                 return (
                   <Stack direction="row" spacing={2} key={voice}>
                     <Box
@@ -252,11 +252,7 @@ function InfinitiveVerbs() {
                     >
                       {i === 0 && (
                         <strong>
-                          {(
-                            sm
-                              ? `${voiceName.slice(0, 3)}.`
-                              : voiceName
-                          )}
+                          {voiceName}
                         </strong>
                       )}
                     </Box>
@@ -276,7 +272,7 @@ function InfinitiveVerbs() {
                         >
                           {sm ? tenseName.slice(0, 4).replace(/[ieu]$/, '') : tenseName}
                           {' '}
-                          {sm ? voiceName.slice(0, 3) : voiceName}
+                          {voiceName}
                         </Button>
                       );
                     })}
