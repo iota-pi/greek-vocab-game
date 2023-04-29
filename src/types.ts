@@ -6,6 +6,7 @@ export type VerbTense = 'present' | 'imperfect' | 'aorist' | 'future'; // | 'per
 export type VerbMood = 'indicative' | 'imperative' | 'infinitive' | 'subjunctive' | 'participle';
 export type VerbVoice = 'active' | 'middle';
 export type Article = 'ὁ' | 'ἡ' | 'το';
+export type AdjectiveForm = '2-2-2' | '2-2';
 export type GameCategory = 'nouns' | 'verbs' | 'indicative' | 'imperative' | 'infinitive';
 
 export type NounParsing = {
