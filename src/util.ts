@@ -88,7 +88,7 @@ export function getMoodName(mood: VerbMood) {
 export function getVoiceName(voice: VerbVoice) {
   const mapping: Record<VerbVoice, string> = {
     active: 'Active',
-    middle: 'Middle',
+    middle: 'Middle/Passive',
   };
   return mapping[voice];
 }
