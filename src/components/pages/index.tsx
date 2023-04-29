@@ -42,7 +42,7 @@ export const gamePages: Page[] = [
   {
     id: 'present-verbs',
     path: '/present-verbs/',
-    name: 'Present Verbs',
+    name: 'Present Active Indicative Verbs',
     page: <PresentVerbsPage />,
   },
   {
