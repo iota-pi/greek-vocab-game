@@ -229,7 +229,7 @@ function IndicativeVerbs() {
                     <strong>
                       {(
                         sm
-                          ? `${getTenseName(tense).slice(0, 4).replace(/i$/, '')}.`
+                          ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
                           : getTenseName(tense)
                       )}
                     </strong>
