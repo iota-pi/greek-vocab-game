@@ -2,6 +2,15 @@ import paradigms, { type VerbEnding } from './data/verbParadigms';
 import verbs, { VerbData } from './data/verbs';
 import type { VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
 
+export type ConjugateVerbParams = {
+  mood: VerbMood,
+  number: WordNumber,
+  person: VerbPerson,
+  tense: VerbTense,
+  verb: string,
+  voice: VerbVoice,
+};
+
 export function conjugateVerb({
   mood,
   number,
@@ -9,18 +18,18 @@ export function conjugateVerb({
   tense,
   verb,
   voice,
-}: {
-  mood: VerbMood,
-  number: WordNumber,
-  person: VerbPerson,
-  tense: VerbTense,
-  verb: string,
-  voice: VerbVoice,
-}) {
+}: ConjugateVerbParams): string | null {
   const data = getVerbData(verb);
-  const override = data.overrides?.[mood]?.[voice]?.[tense]?.[number]?.[person];
+  const override = data.overrides?.[mood]?.[voice]?.[tense];
   if (override) {
-    return override;
+    let overrideResult = (
+      typeof override === 'string'
+        ? override
+        : override?.[number]?.[person]
+    );
+    if (overrideResult) {
+      return overrideResult;
+    }
   }
   if (data.omit?.includes(tense)) {
     throw new Error(`Cannot conjugate ${verb} with ${tense} tense`);
@@ -53,6 +62,20 @@ export function conjugateVerb({
   return result;
 }
 
+export function getConjugatedVerb(params: ConjugateVerbParams) {
+  const result = conjugateVerb(params);
+  return result && chooseStringPart(result);
+}
+
+export function checkConjugation(toCheck: string, params: ConjugateVerbParams): boolean {
+  const result = conjugateVerb(params);
+  if (!result) {
+    return false;
+  }
+  const parts = getStringParts(result);
+  return parts.includes(toCheck);
+}
+
 export function getParadigm(verb: string) {
   const ending = getEnding(verb);
   const paradigm = paradigms[ending];
@@ -60,7 +83,6 @@ export function getParadigm(verb: string) {
 }
 
 export function getEnding(verb: string) {
-  // const endings: VerbEnding[] = ['εω', 'ω'];
   const endings: VerbEnding[] = ['ω'];
   for (const ending of endings) {
     if (verb.endsWith(ending)) {
@@ -74,7 +96,18 @@ export function getPreposition(data: VerbData) {
   return data.preposition ?? '';
 }
 
-export function applyEnding(stem: string, ending: string) {
+export function getStringParts(string: string, delimiter = '|') {
+  return string.split(delimiter);
+}
+
+export function chooseStringPart(string: string, delimiter = '|') {
+  const parts = getStringParts(string, delimiter);
+  const part = parts[Math.floor(Math.random() * parts.length)];
+  return part;
+}
+
+export function applyEnding(stem: string, endingString: string) {
+  const ending = chooseStringPart(endingString);
   const x = '!!!!';
   return (
     `${stem}${x}${ending}`

@@ -1,4 +1,4 @@
-import { conjugateVerb } from './conjugater';
+import { ConjugateVerbParams, checkConjugation, conjugateVerb, getConjugatedVerb } from './conjugater';
 import { VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
 
 describe('conjugateVerb', () => {
@@ -38,7 +38,7 @@ describe('conjugateVerb', () => {
     ['ποιεω', 'aorist', 'active', 'indicative', 'first', 'plural', 'ἐποιησαμεν'],
     ['καλεω', 'aorist', 'active', 'indicative', 'first', 'singular', 'ἐκαλεσα'],
     ['ἀκολoυθεω', 'imperfect', 'active', 'indicative', 'first', 'plural', 'ἠκολoυθουμεν'],
-    ['εἰμι', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἠμεν'],
+    ['εἰμι', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἠμην'],
     ['παρακαλεω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'παρεκαλουν'],
     ['διακονεω', 'imperfect', 'active', 'indicative', 'first', 'plural', 'διηκονουμεν'],
     ['ὑπαγω', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ὑπηγες'],
@@ -50,7 +50,7 @@ describe('conjugateVerb', () => {
     ['λυω', 'future', 'middle', 'infinitive', 'first', 'plural', null],
     ['φωνεω', 'present', 'middle', 'imperative', 'second', 'singular', 'φωνου'],
     ['εἰμι', 'present', 'active', 'imperative', 'first', 'singular', null],
-  ])('%s, %s, %s, %s = "%s"', (verb, tense, voice, mood, person, number, expected) => {
+  ])('%s, %s, %s, %s, %s, %s = "%s"', (verb, tense, voice, mood, person, number, expected) => {
     const result = conjugateVerb({
       mood,
       number,
@@ -60,5 +60,25 @@ describe('conjugateVerb', () => {
       voice,
     });
     expect(result).toEqual(expected);
+  });
+
+  it.each<[string, VerbTense, VerbVoice, VerbMood, VerbPerson, WordNumber, string]>([
+    ['εἰμι', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ἠς'],
+    ['εἰμι', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ἠσθα'],
+    ['εἰμι', 'imperfect', 'active', 'indicative', 'first', 'plural', 'ἠμεν'],
+    ['εἰμι', 'imperfect', 'active', 'indicative', 'first', 'plural', 'ἠμεθα'],
+  ])('%s, %s, %s, %s, %s, %s matches "%s"', (verb, tense, voice, mood, person, number, test) => {
+    const result = checkConjugation(
+      test,
+      {
+        mood,
+        number,
+        person,
+        tense,
+        verb,
+        voice,
+      },
+    );
+    expect(result).toEqual(true);
   });
 });

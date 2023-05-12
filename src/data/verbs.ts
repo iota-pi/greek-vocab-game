@@ -32,7 +32,7 @@ const rawVerbs: VerbData[] = [
           },
           imperfect: {
             singular: {
-              first: 'ἠμεν',
+              first: 'ἠμην',
               second: 'ἠς|ἠσθα',
               third: 'ἠν',
             },
