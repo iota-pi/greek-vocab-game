@@ -321,14 +321,14 @@ const rawVerbs: VerbData[] = [
     preposition: 'δι',
   },
   {
-    word: 'αποστελλω',
-    lexical: 'αποστελλω',
-    preposition: 'απο',
+    word: 'ἀποστελλω',
+    lexical: 'ἀποστελλω',
+    preposition: 'ἀπο',
   },
   {
-    word: 'εκβαλλω',
-    lexical: 'εκβαλλω',
-    preposition: 'εκ',
+    word: 'ἐκβαλλω',
+    lexical: 'ἐκβαλλω',
+    preposition: 'ἐκ',
   },
   {
     word: 'παρακαλεω',

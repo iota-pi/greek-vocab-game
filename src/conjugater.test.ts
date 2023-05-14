@@ -50,6 +50,8 @@ describe('conjugateVerb', () => {
     ['λυω', 'future', 'middle', 'infinitive', 'first', 'plural', null],
     ['φωνεω', 'present', 'middle', 'imperative', 'second', 'singular', 'φωνου'],
     ['εἰμι', 'present', 'active', 'imperative', 'first', 'singular', null],
+    ['ἀποστελλω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἀπεστελλον'],
+    ['ἐκβαλλω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἐξεβαλλον'],
   ])('%s, %s, %s, %s, %s, %s = "%s"', (verb, tense, voice, mood, person, number, expected) => {
     const result = conjugateVerb({
       mood,
