@@ -18,9 +18,9 @@ import type {
   VerbTense,
 } from '../../types';
 import { getNumberName, getPersonName, getTenseName } from '../../util';
-import Timer from '../Timer';
 import StartGameDialog from '../StartGameDialog';
 import { conjugateVerb } from '../../conjugater';
+import GameHeader from '../GameHeader';
 
 const PERSONS: VerbPerson[] = ['first', 'second', 'third'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
@@ -166,43 +166,14 @@ function IndicativeVerbs() {
   return (
     <Box padding={2}>
       <Stack alignItems="center">
-
-        <Box
-          display="flex"
-          alignItems="center"
-          width="100%"
-        >
-          <Box flex={1}>
-            Score: {score} / {total} ({NUM_QUESTIONS - total} remaining)
-          </Box>
-
-          <Box
-            display="flex"
-            flex={1}
-            justifyContent="center"
-          >
-            {startTime && (
-              <span>
-                Time: <Timer startTime={startTime} endTime={endTime} />
-              </span>
-            )}
-          </Box>
-
-          <Box
-            display="flex"
-            flex={1}
-            justifyContent="flex-end"
-          >
-            <Button
-              onClick={handleRestart}
-              variant="outlined"
-            >
-              Restart
-            </Button>
-          </Box>
-        </Box>
-
-        <Divider />
+        <GameHeader
+          endTime={endTime}
+          questionsInQuiz={NUM_QUESTIONS}
+          onRestart={handleRestart}
+          score={score}
+          startTime={startTime}
+          total={total}
+        />
 
         {gameActive ? (
           <>

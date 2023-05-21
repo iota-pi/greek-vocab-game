@@ -19,8 +19,8 @@ import type {
   WordNumber,
 } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
-import Timer from '../Timer';
 import StartGameDialog from '../StartGameDialog';
+import GameHeader from '../GameHeader';
 
 const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
@@ -156,45 +156,16 @@ function Nouns() {
 
   return (
     <Box padding={2}>
+      <GameHeader
+        endTime={endTime}
+        questionsInQuiz={NUM_QUESTIONS}
+        onRestart={handleRestart}
+        score={score}
+        startTime={startTime}
+        total={total}
+      />
+
       <Stack alignItems="center">
-
-        <Box
-          display="flex"
-          alignItems="center"
-          width="100%"
-        >
-          <Box flex={1}>
-            Score: {score} / {total} ({NUM_QUESTIONS - total} remaining)
-          </Box>
-
-          <Box
-            display="flex"
-            flex={1}
-            justifyContent="center"
-          >
-            {startTime && (
-              <span>
-                Time: <Timer startTime={startTime} endTime={endTime} />
-              </span>
-            )}
-          </Box>
-
-          <Box
-            display="flex"
-            flex={1}
-            justifyContent="flex-end"
-          >
-            <Button
-              onClick={handleRestart}
-              variant="outlined"
-            >
-              Restart
-            </Button>
-          </Box>
-        </Box>
-
-        <Divider />
-
         {gameActive ? (
           <>
             <Typography
