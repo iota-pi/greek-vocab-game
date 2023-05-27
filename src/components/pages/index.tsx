@@ -1,11 +1,11 @@
 import { ReactNode, useMemo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import MenuPage from './Menu';
-import NounsPage from './Nouns';
-import PresentVerbsPage from './PresentVerbs';
-import IndicativeVerbs from './IndicativeVerbs';
-import InfinitiveVerbs from './InfVerbs';
-import ImperativeVerbs from './ImpVerbs';
+import NounsPage from './NounsPage';
+import PresentVerbsPage from './PresentVerbsPage';
+import IndicativeVerbs from './IndicativeVerbsPage';
+import InfinitiveVerbs from './InfinitiveVerbsPage';
+import ImperativeVerbs from './ImperativeVerbsPage';
 
 export type PageId = (
   | 'menu'

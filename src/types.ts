@@ -48,15 +48,10 @@ export type VerbOverrideParadigms = (
   >>
 );
 
-export type NounWithParsing = NounParsing & {
+export type WordWithParsing<P> = P & {
   word: string,
   lexical: string,
-};
-
-export type VerbWithParsing = VerbParsing & {
-  word: string,
-  lexical: string,
-};
+}
 
 export type Report<P> = {
   word: string,
@@ -64,3 +59,8 @@ export type Report<P> = {
   expected: P,
   given: P,
 };
+
+export type GameComponentProps<T> = {
+  currentWord: WordWithParsing<T>,
+  onAnswer: (correct: boolean, chosen: T) => void,
+}

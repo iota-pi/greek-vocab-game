@@ -7,11 +7,11 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import verbs from '../../data/verbs';
 import type {
   VerbPerson,
-  VerbWithParsing,
+  WordWithParsing,
   Report,
   WordNumber,
   VerbParsing,
@@ -19,27 +19,29 @@ import type {
   VerbMood,
   VerbVoice,
 } from '../../types';
-import { getShortVoiceName, getTenseName, getVoiceName } from '../../util';
+import { getNumberName, getPersonName, getShortVoiceName, getTenseName, getVoiceName } from '../../util';
 import StartGameDialog from '../StartGameDialog';
 import { conjugateVerb } from '../../conjugater';
 import GameHeader from '../GameHeader';
 
+const PERSONS: VerbPerson[] = ['second', 'third'];
+const NUMBERS: WordNumber[] = ['singular', 'plural'];
 const TENSES: VerbTense[] = ['present', 'aorist'];
 const VOICES: VerbVoice[] = ['active', 'middle'];
 
+const mood: VerbMood = 'imperative';
+
 const COL_WIDTH = 140;
-const COL_WIDTH_SM = 100;
+const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
 const NUM_QUESTIONS = 10;
 
-const person: VerbPerson = 'first';
-const number: WordNumber = 'singular';
-const mood: VerbMood = 'infinitive';
-
-function pickWord(): VerbWithParsing {
+function pickWord(): WordWithParsing<VerbParsing> {
   const verb = verbs[Math.floor(Math.random() * verbs.length)];
+  const person = PERSONS[Math.floor(Math.random() * PERSONS.length)];
+  const number = NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
   const validTenses = TENSES.filter(t => !verb.omit?.includes(t));
   const tense = validTenses[Math.floor(Math.random() * validTenses.length)];
   const voice = VOICES[Math.floor(Math.random() * VOICES.length)];
@@ -76,7 +78,7 @@ function pickWord(): VerbWithParsing {
   }
 }
 
-function InfinitiveVerbs() {
+function ImperativeVerbs() {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
@@ -102,7 +104,9 @@ function InfinitiveVerbs() {
   );
 
   const checkAnswer = useCallback(
-    ({ tense, voice } : {
+    ({ number, person, tense, voice } : {
+      number: WordNumber,
+      person: VerbPerson,
       tense: VerbTense,
       voice: VerbVoice,
     }) => {
@@ -193,69 +197,88 @@ function InfinitiveVerbs() {
                 <Box minWidth={firstColWidth} />
 
                 {TENSES.map(tense => (
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    fontWeight={700}
-                    justifyContent="center"
-                    key={tense}
-                    minWidth={colWidth}
-                    textAlign="center"
-                  >
-                    {(
-                      sm
-                        ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
-                        : getTenseName(tense)
-                    )}
-                  </Box>
+                  VOICES.map(voice => (
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      fontWeight={700}
+                      justifyContent="center"
+                      key={`${tense} ${voice}`}
+                      minWidth={colWidth}
+                      textAlign="center"
+                    >
+                      {(
+                        sm
+                          ? `${getTenseName(tense).slice(0, 4).replace(/[ieu]$/, '')}.`
+                          : getTenseName(tense)
+                      )}
+                      <br />
+                      {(
+                        sm
+                          ? `${getShortVoiceName(voice)}`
+                          : getVoiceName(voice)
+                      )}
+                    </Box>
+                  ))
                 ))}
               </Stack>
 
-              {VOICES.map((voice, i) => {
-                const voiceName = sm ? getShortVoiceName(voice) : getVoiceName(voice);
-                return (
-                  <Stack direction="row" spacing={2} key={voice}>
-                    <Box
-                      minWidth={firstColWidth}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      {i === 0 && (
-                        <strong>
-                          {voiceName}
-                        </strong>
-                      )}
-                    </Box>
+              {NUMBERS.map(number => (
+                <Fragment key={number}>
+                  <Divider />
 
-                    {TENSES.map(tense => {
-                      const tenseName = getTenseName(tense);
-                      const innerKey = `${voice}-${tense}`;
-                      return (
-                        <Button
-                          key={innerKey}
-                          onClick={() => checkAnswer({ tense, voice })}
-                          size="large"
-                          sx={{
-                            minWidth: colWidth,
-                          }}
-                          variant="outlined"
+                  {PERSONS.map((person, i) => {
+                    const numberName = getNumberName(number);
+                    const personName = getPersonName(person);
+                    const key = `${person}-${number}`;
+                    return (
+                      <Stack direction="row" spacing={2} key={key}>
+                        <Box
+                          minWidth={firstColWidth}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
                         >
-                          {sm ? tenseName.slice(0, 4).replace(/[ieu]$/, '') : tenseName}
-                          {' '}
-                          {voiceName}
-                        </Button>
-                      );
-                    })}
-                  </Stack>
-                );
-              })}
+                          {i === 0 && (
+                            <strong>
+                              {(
+                                sm
+                                  ? `${numberName.slice(0, numberName.length - 4)}.`
+                                  : numberName
+                              )}
+                            </strong>
+                          )}
+                        </Box>
+
+                        {TENSES.map(tense => (
+                          VOICES.map(voice => {
+                            const innerKey = `${key}-${tense}-${voice}`;
+                            return (
+                              <Button
+                                key={innerKey}
+                                onClick={() => checkAnswer({ number, person, tense, voice })}
+                                size="large"
+                                sx={{
+                                  minWidth: colWidth,
+                                }}
+                                variant="outlined"
+                              >
+                                {sm ? personName.slice(0, 3) : personName}
+                              </Button>
+                            );
+                          })
+                        ))}
+                      </Stack>
+                    );
+                  })}
+                </Fragment>
+              ))}
             </Stack>
           </>
         ) : (
           <StartGameDialog
-            category="infinitive"
-            title="Infinitive Verb Parsing"
+            category="imperative"
+            title="Imperative Verb Parsing"
             onStart={handleStart}
             report={report}
             endTime={endTime}
@@ -265,6 +288,8 @@ function InfinitiveVerbs() {
                 [
                   getTenseName(parsing.tense),
                   getVoiceName(parsing.voice),
+                  getPersonName(parsing.person),
+                  getNumberName(parsing.number),
                 ].join(' ')
               )
             )}
@@ -279,4 +304,4 @@ function InfinitiveVerbs() {
   );
 }
 
-export default InfinitiveVerbs;
+export default ImperativeVerbs;
