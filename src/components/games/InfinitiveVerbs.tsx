@@ -46,7 +46,7 @@ function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
         person,
         tense,
         voice,
-      }
+      };
 
       let correct = false;
       const declinedGuess = conjugateVerb({
@@ -59,7 +59,7 @@ function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
 
       onAnswer(correct, fullGuess);
     },
-    [currentWord],
+    [currentWord, onAnswer],
   );
 
   return (

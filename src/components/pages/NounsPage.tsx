@@ -1,7 +1,6 @@
 import nouns from '../../data/nouns';
 import { declineNoun, getGender } from '../../decliner';
 import type {
-  Gender,
   NounCase,
   NounParsing,
   WordWithParsing,
@@ -44,7 +43,7 @@ function pickWord(): WordWithParsing<NounParsing> {
 function NounsPage() {
   return (
     <GameBase
-      formatter={
+      formatter={(
         parsing => (
           [
             getCaseName(parsing.nounCase),
@@ -52,7 +51,7 @@ function NounsPage() {
             getGenderName(parsing.gender),
           ].join(' ')
         )
-      }
+      )}
       gameComponent={Nouns}
       numQuestions={20}
       pickWord={pickWord}

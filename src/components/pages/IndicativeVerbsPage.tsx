@@ -59,7 +59,7 @@ function pickWord(): WordWithParsing<VerbParsing> {
 function PresentVerbsPage() {
   return (
     <GameBase
-      formatter={
+      formatter={(
         parsing => (
           [
             getTenseName(parsing.tense),
@@ -67,7 +67,7 @@ function PresentVerbsPage() {
             getNumberName(parsing.number),
           ].join(' ')
         )
-      }
+      )}
       gameComponent={IndicativeVerbs}
       numQuestions={10}
       pickWord={pickWord}

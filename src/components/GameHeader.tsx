@@ -1,5 +1,5 @@
-import { Box, Button, Divider } from "@mui/material";
-import Timer from "./Timer";
+import { Box, Button, Divider } from '@mui/material';
+import Timer from './Timer';
 
 function GameHeader({
   endTime,

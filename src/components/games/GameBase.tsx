@@ -41,7 +41,7 @@ function GameBase<T>({
         return word;
       },
     ),
-    [],
+    [pickWord],
   );
 
   const handleAnswer = useCallback(
@@ -65,7 +65,7 @@ function GameBase<T>({
 
       getNewWord();
     },
-    [currentWord, getNewWord, total],
+    [currentWord, getNewWord, numQuestions, total],
   );
 
   const handleStart = useCallback(

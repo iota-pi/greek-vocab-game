@@ -61,14 +61,14 @@ function pickWord(): WordWithParsing<VerbParsing> {
 function InfinitiveVerbsPage() {
   return (
     <GameBase
-      formatter={
+      formatter={(
         parsing => (
           [
             getTenseName(parsing.tense),
             getVoiceName(parsing.voice),
           ].join(' ')
         )
-      }
+      )}
       gameComponent={InfinitiveVerbs}
       numQuestions={10}
       pickWord={pickWord}

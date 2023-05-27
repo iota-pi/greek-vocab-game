@@ -9,7 +9,6 @@ import {
 import { Fragment, useCallback } from 'react';
 import type {
   VerbPerson,
-  Report,
   WordNumber,
   VerbParsing,
   GameComponentProps,
@@ -24,8 +23,6 @@ const COL_WIDTH = 140;
 const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
-
-const NUM_QUESTIONS = 10;
 
 function PresentVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsing>) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -56,7 +53,7 @@ function PresentVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsing>
 
       onAnswer(correct, fullGuess);
     },
-    [currentWord],
+    [currentWord, onAnswer],
   );
 
   return (

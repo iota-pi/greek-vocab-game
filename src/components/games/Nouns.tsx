@@ -65,7 +65,7 @@ function Nouns({ currentWord, onAnswer }: GameComponentProps<NounParsing>) {
 
       onAnswer(correct, { gender, nounCase, number });
     },
-    [currentWord],
+    [currentWord, onAnswer],
   );
 
   return (

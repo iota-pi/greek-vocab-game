@@ -1,4 +1,4 @@
-import { ConjugateVerbParams, checkConjugation, conjugateVerb, getConjugatedVerb } from './conjugater';
+import { checkConjugation, conjugateVerb } from './conjugater';
 import { VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
 
 describe('conjugateVerb', () => {

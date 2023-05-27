@@ -22,7 +22,7 @@ export function conjugateVerb({
   const data = getVerbData(verb);
   const override = data.overrides?.[mood]?.[voice]?.[tense];
   if (override) {
-    let overrideResult = (
+    const overrideResult = (
       typeof override === 'string'
         ? override
         : override?.[number]?.[person]

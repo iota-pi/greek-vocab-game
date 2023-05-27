@@ -7,7 +7,6 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { Fragment, useCallback } from 'react';
-import verbs from '../../data/verbs';
 import type {
   VerbPerson,
   WordNumber,
@@ -50,7 +49,7 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
         person,
         tense,
         voice,
-      }
+      };
 
       let correct = false;
       const declinedGuess = conjugateVerb({
@@ -63,7 +62,7 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
 
       onAnswer(correct, fullGuess);
     },
-    [currentWord],
+    [currentWord, onAnswer],
   );
 
   return (

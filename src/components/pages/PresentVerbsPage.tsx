@@ -55,14 +55,14 @@ function pickWord(): WordWithParsing<VerbParsing> {
 function PresentVerbsPage() {
   return (
     <GameBase
-      formatter={
+      formatter={(
         parsing => (
           [
             getPersonName(parsing.person),
             getNumberName(parsing.number),
           ].join(' ')
         )
-      }
+      )}
       gameComponent={PresentVerbs}
       numQuestions={10}
       pickWord={pickWord}
