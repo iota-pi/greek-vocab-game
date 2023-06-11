@@ -1,4 +1,4 @@
-import type { VerbOverrideParadigms, VerbTense } from '../types';
+import type { PrincipalParts, VerbOverrideParadigms, VerbTense } from '../types';
 import { applyWeightings } from '../util';
 
 export type VerbData = {
@@ -7,6 +7,7 @@ export type VerbData = {
   overrides?: VerbOverrideParadigms,
   omit?: VerbTense[],
   preposition?: string,
+  principalParts?: PrincipalParts,
   weight?: number,
   uniqueParadigm?: boolean,
 };
@@ -15,6 +16,12 @@ const rawVerbs: VerbData[] = [
   {
     word: 'εἰμι',
     lexical: 'εἰμι',
+    principalParts: {
+      future: {
+        stem: 'ἐ',
+        ending: 'ομαι',
+      },
+    },
     overrides: {
       indicative: {
         active: {
@@ -64,28 +71,26 @@ const rawVerbs: VerbData[] = [
   {
     word: 'εὑρισκω',
     lexical: 'εὑρισκω',
-    overrides: {
-      indicative: {
-        active: {
-          future: {
-            singular: {
-              first: 'εὑρησω',
-              second: 'εὑρησεις',
-              third: 'εὑρησει',
-            },
-            plural: {
-              first: 'εὑρησομεν',
-              second: 'εὑρησετε',
-              third: 'εὑρησουσιν',
-            },
-          },
-        },
+    principalParts: {
+      future: {
+        stem: 'εὑρη',
+        ending: 'ω',
       },
     },
   },
   {
     word: 'ἐχω',
     lexical: 'ἐχω',
+    principalParts: {
+      aorist: {
+        stem: 'εἰχ',
+        ending: 'α',
+      },
+      future: {
+        stem: 'ἑχ',
+        ending: 'ω',
+      },
+    },
     overrides: {
       indicative: {
         active: {
@@ -99,30 +104,6 @@ const rawVerbs: VerbData[] = [
               first: 'εἰχομεν',
               second: 'εἰχετε',
               third: 'εἰχον',
-            },
-          },
-          aorist: {
-            singular: {
-              first: 'εἰξα',
-              second: 'εἰξες',
-              third: 'εἰξεν',
-            },
-            plural: {
-              first: 'εἰξαμεν',
-              second: 'εἰξατε',
-              third: 'εἰξαν',
-            },
-          },
-          future: {
-            singular: {
-              first: 'ἑξω',
-              second: 'ἑξεις',
-              third: 'ἑξει',
-            },
-            plural: {
-              first: 'ἑξομεν',
-              second: 'ἑξετε',
-              third: 'ἑξουσιν',
             },
           },
         },
@@ -250,34 +231,19 @@ const rawVerbs: VerbData[] = [
   {
     word: 'φερω',
     lexical: 'φερω',
-    overrides: {
-      indicative: {
-        active: {
-          aorist: {
-            singular: {
-              first: 'ἠνεγκα',
-              second: 'ἠνεγκασ',
-              third: 'ἠνεγκεν',
-            },
-            plural: {
-              first: 'ἠνεγκαμεν',
-              second: 'ἠνεγκατε',
-              third: 'ἠνεγκαν',
-            },
-          },
-          future: {
-            singular: {
-              first: 'οἰσω',
-              second: 'οἰσεις',
-              third: 'οἰσει',
-            },
-            plural: {
-              first: 'οἰσομεν',
-              second: 'οἰσετε',
-              third: 'οἰσουσιν',
-            },
-          },
-        },
+    principalParts: {
+      future: {
+        stem: 'οἰ',
+        ending: 'ω',
+      },
+      aoristPassive: {
+        stem: 'οἰ',
+        ending: 'ομαι',
+      },
+      aorist: {
+        stem: 'ἠνεγκ',
+        ending: 'α',
+        noTenseMarker: true,
       },
     },
   },

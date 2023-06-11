@@ -50,8 +50,16 @@ describe('conjugateVerb', () => {
     ['λυω', 'future', 'middle', 'infinitive', 'first', 'plural', null],
     ['φωνεω', 'present', 'middle', 'imperative', 'second', 'singular', 'φωνου'],
     ['εἰμι', 'present', 'active', 'imperative', 'first', 'singular', null],
+    ['εἰμι', 'future', 'active', 'indicative', 'first', 'singular', 'ἐσομαι'],
+    ['εἰμι', 'future', 'active', 'indicative', 'second', 'plural', 'ἐσεσθε'],
     ['ἀποστελλω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἀπεστελλον'],
     ['ἐκβαλλω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἐξεβαλλον'],
+    ['λυω', 'future', 'passive', 'indicative', 'first', 'singular', 'λυθησομαι'],
+    ['λυω', 'future', 'passive', 'indicative', 'third', 'plural', 'λυθησονται'],
+    ['φωνεω', 'aorist', 'passive', 'indicative', 'second', 'singular', 'ἐφωνηθης'],
+    ['φερω', 'future', 'active', 'indicative', 'second', 'singular', 'οἰσεις'],
+    ['φερω', 'future', 'passive', 'indicative', 'second', 'singular', 'οἰθησῃ'],
+    ['φερω', 'aorist', 'active', 'indicative', 'second', 'singular', 'ἠνεγκας'],
   ])('%s, %s, %s, %s, %s, %s = "%s"', (verb, tense, voice, mood, person, number, expected) => {
     const result = conjugateVerb({
       mood,

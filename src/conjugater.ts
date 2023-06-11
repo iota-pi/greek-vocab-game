@@ -1,6 +1,6 @@
-import paradigms, { type VerbEnding } from './data/verbParadigms';
+import paradigms, { standardEndings, tenseMarkers, type VerbEnding } from './data/verbParadigms';
 import verbs, { VerbData } from './data/verbs';
-import type { VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
+import type { PrincipalPart, VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
 
 export type ConjugateVerbParams = {
   mood: VerbMood,
@@ -34,31 +34,45 @@ export function conjugateVerb({
   if (data.omit?.includes(tense)) {
     throw new Error(`Cannot conjugate ${verb} with ${tense} tense`);
   }
-  if (data.uniqueParadigm) {
+
+  const principalPart = getPrincipalPart(data, tense, voice);
+  if (!principalPart && data.uniqueParadigm) {
     return null;
   }
 
-  const paradigm = getParadigm(verb);
-  const ending = getEnding(verb);
+  const baseWord = principalPart?.stem || verb;
+  const paradigm = principalPart?.ending || standardEndings?.[tense]?.[voice]?.[mood];
+  if (!paradigm) {
+    return null;
+  }
+
   const preposition = getPreposition(data);
-  const stem = verb.slice(preposition.length, verb.length - ending.length);
-  const augmentedStem = applyAugment(preposition, stem, tense, mood);
-  const paradigmForTense = paradigm.moods[mood]?.[voice]?.[tense];
-  if (!paradigmForTense) {
-    return null;
+  let stem: string;
+  if (!principalPart) {
+    const ending = getEnding(baseWord);
+    const originalStem = baseWord.slice(preposition.length, baseWord.length - ending.length);
+    stem = applyAugment(preposition, originalStem, tense, mood);
+  } else {
+    stem = baseWord;
   }
 
-  let conjugatedEnding: string | null;
-  if (typeof paradigmForTense === 'string') {
-    conjugatedEnding = paradigmForTense;
+  const tenseMarker = (
+    principalPart?.noTenseMarker
+      ? ''
+      : tenseMarkers?.[tense]?.[voice]?.[mood]
+  ) || '';
+
+  let conjugatedEnding: string | undefined | null;
+  if (mood === 'infinitive') {
+    conjugatedEnding = paradigm;
   } else {
-    conjugatedEnding = paradigmForTense[number][person];
+    conjugatedEnding = paradigms[paradigm]?.paradigm?.[number]?.[person];
   }
   if (!conjugatedEnding) {
     return null;
   }
 
-  const result = applyEnding(augmentedStem, conjugatedEnding);
+  const result = applyEnding(stem, tenseMarker, conjugatedEnding);
   return result;
 }
 
@@ -76,14 +90,41 @@ export function checkConjugation(toCheck: string, params: ConjugateVerbParams): 
   return parts.includes(toCheck);
 }
 
-export function getParadigm(verb: string) {
-  const ending = getEnding(verb);
-  const paradigm = paradigms[ending];
-  return paradigm;
+export function getPrincipalPart(verb: VerbData, tense: VerbTense, voice: VerbVoice) {
+  let principalPart: PrincipalPart;
+  if (
+    voice === 'passive'
+    && (tense === 'aorist' || tense === 'future')
+  ) {
+    principalPart = 'aoristPassive';
+  } else if (tense === 'present' || tense === 'imperfect') {
+    principalPart = 'present';
+  } else if (tense === 'future') {
+    principalPart = 'future';
+  } else if (tense === 'aorist') {
+    principalPart = 'aorist';
+  } else {
+    return null;
+  }
+  return verb.principalParts?.[principalPart] || null;
 }
 
 export function getEnding(verb: string) {
-  const endings: VerbEnding[] = ['ω'];
+  const endings: VerbEnding[] = [
+    'ομαι',
+    'αμην',
+    'ειν',
+    'εσθαι',
+    'ομην',
+    'ασθαι',
+    'αι',
+    'σον',
+    'ον',
+    'ου',
+    'ω',
+    'α',
+    'ε',
+  ];
   for (const ending of endings) {
     if (verb.endsWith(ending)) {
       return ending;
@@ -106,15 +147,16 @@ export function chooseStringPart(string: string, delimiter = '|') {
   return part;
 }
 
-export function applyEnding(stem: string, endingString: string) {
+export function applyEnding(stem: string, tenseMarker: string, endingString: string) {
   const ending = chooseStringPart(endingString);
   const x = '!!!!';
   return (
-    `${stem}${x}${ending}`
+    `${stem}${x}${tenseMarker}${ending}`
       .replace(new RegExp(`[κγχ]${x}σ`), `ξ${x}`)
       .replace(new RegExp(`[πβφ]${x}σ`), `ψ${x}`)
       .replace(new RegExp(`[τδθ]${x}σ`), `σ${x}`)
       .replace(new RegExp(`ε${x}σ`), `${x}ησ`)
+      .replace(new RegExp(`ε${x}θ`), `${x}ηθ`)
       .replace(new RegExp(`ε${x}ε(?![ιυ])`), `${x}ει`)
       .replace(new RegExp(`ε${x}ει`), `${x}ει`)
       .replace(new RegExp(`ε${x}ο(?![ιυ])`), `${x}ου`)

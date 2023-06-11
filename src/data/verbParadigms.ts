@@ -1,250 +1,340 @@
-import { VerbMoodParadigms } from '../types';
+import { VerbMood, VerbParadigmPattern, VerbTense, VerbVoice } from '../types';
 
 export type Paradigm = {
-  example: string,
-  moods: VerbMoodParadigms,
+  paradigm: VerbParadigmPattern,
   ending: VerbEnding,
 };
-export type VerbEnding = 'ω';
+export type VerbEnding = (
+  | 'ω'
+  | 'ον'
+  | 'ομαι'
+  | 'α'
+  | 'ομην'
+  | 'αμην'
+  | 'ε'
+  | 'σον'
+  | 'ου'
+  | 'ειν'
+  | 'αι'
+  | 'εσθαι'
+  | 'ασθαι'
+  | 'ην'
+  | 'ητι'
+  | 'ηναι'
+);
 
-const paradigms: Record<VerbEnding, Paradigm> = {
+const paradigms: Record<VerbEnding, Paradigm | null> = {
   ω: {
-    example: 'λυω',
-    moods: {
-      indicative: {
-        active: {
-          present: {
-            singular: {
-              first: 'ω',
-              second: 'εις',
-              third: 'ει',
-            },
-            plural: {
-              first: 'ομεν',
-              second: 'ετε',
-              third: 'ουσιν',
-            },
-          },
-          imperfect: {
-            singular: {
-              first: 'ον',
-              second: 'ες',
-              third: 'εν',
-            },
-            plural: {
-              first: 'ομεν',
-              second: 'ετε',
-              third: 'ον',
-            },
-          },
-          aorist: {
-            singular: {
-              first: 'σα',
-              second: 'σας',
-              third: 'σεν',
-            },
-            plural: {
-              first: 'σαμεν',
-              second: 'σατε',
-              third: 'σαν',
-            },
-          },
-          future: {
-            singular: {
-              first: 'σω',
-              second: 'σεις',
-              third: 'σει',
-            },
-            plural: {
-              first: 'σομεν',
-              second: 'σετε',
-              third: 'σουσιν',
-            },
-          },
-        },
-        middle: {
-          present: {
-            singular: {
-              first: 'ομαι',
-              second: 'ῃ',
-              third: 'εται',
-            },
-            plural: {
-              first: 'ομεθα',
-              second: 'εσθε',
-              third: 'ονται',
-            },
-          },
-          imperfect: {
-            singular: {
-              first: 'ομην',
-              second: 'ου',
-              third: 'ετο',
-            },
-            plural: {
-              first: 'ομεθα',
-              second: 'εσθε',
-              third: 'οντο',
-            },
-          },
-          future: {
-            singular: {
-              first: 'σομαι',
-              second: 'σῃ',
-              third: 'σεται',
-            },
-            plural: {
-              first: 'σομεθα',
-              second: 'σεσθε',
-              third: 'σονται',
-            },
-          },
-          aorist: {
-            singular: {
-              first: 'σαμην',
-              second: 'σω',
-              third: 'σατο',
-            },
-            plural: {
-              first: 'σαμεθα',
-              second: 'σασθε',
-              third: 'σαντο',
-            },
-          },
-        },
+    paradigm: {
+      singular: {
+        first: 'ω',
+        second: 'εις',
+        third: 'ει',
       },
-      imperative: {
-        active: {
-          present: {
-            singular: {
-              first: null,
-              second: 'ε',
-              third: 'ετω',
-            },
-            plural: {
-              first: null,
-              second: 'ετε',
-              third: 'ετωσαν',
-            },
-          },
-          aorist: {
-            singular: {
-              first: null,
-              second: 'σον',
-              third: 'σατω',
-            },
-            plural: {
-              first: null,
-              second: 'σατε',
-              third: 'σατωσαν',
-            },
-          },
-          future: null,
-          imperfect: null,
-        },
-        middle: {
-          present: {
-            singular: {
-              first: null,
-              second: 'ου',
-              third: 'εσθω',
-            },
-            plural: {
-              first: null,
-              second: 'εσθε',
-              third: 'εσθωσαν',
-            },
-          },
-          aorist: {
-            singular: {
-              first: null,
-              second: 'σαι',
-              third: 'σασθω',
-            },
-            plural: {
-              first: null,
-              second: 'σασθε',
-              third: 'σασθωσαν',
-            },
-          },
-          future: null,
-          imperfect: null,
-        },
+      plural: {
+        first: 'ομεν',
+        second: 'ετε',
+        third: 'ουσιν',
       },
-      infinitive: {
-        active: {
-          present: 'ειν',
-          aorist: 'σαι',
-          future: null,
-          imperfect: null,
-        },
-        middle: {
-          present: 'εσθαι',
-          aorist: 'σασθαι',
-          future: null,
-          imperfect: null,
-        },
-      },
-      participle: null,
-      subjunctive: null,
     },
     ending: 'ω',
   },
-  // TODO: replace with contraction rules
-  // εω: {
-  //   example: 'ποιεω',
-  //   tenses: {
-  //     present: {
-  //       singular: {
-  //         first: 'ω',
-  //         second: 'εις',
-  //         third: 'ει',
-  //       },
-  //       plural: {
-  //         first: 'ουμεν',
-  //         second: 'ειτε',
-  //         third: 'ουσιν',
-  //       },
-  //     },
-  //     imperfect: {
-  //       singular: {
-  //         first: 'ουν',
-  //         second: 'εις',
-  //         third: 'ει',
-  //       },
-  //       plural: {
-  //         first: 'ουμεν',
-  //         second: 'ειτε',
-  //         third: 'ουν',
-  //       },
-  //     },
-  //     aorist: {
-  //       singular: {
-  //         first: 'ησα',
-  //         second: 'ησας',
-  //         third: 'ησεν',
-  //       },
-  //       plural: {
-  //         first: 'ησαμεν',
-  //         second: 'ησατε',
-  //         third: 'ησαν',
-  //       },
-  //     },
-  //     future: {
-  //       singular: {
-  //         first: 'ησω',
-  //         second: 'ησεις',
-  //         third: 'ησει',
-  //       },
-  //       plural: {
-  //         first: 'ησομεν',
-  //         second: 'ησετε',
-  //         third: 'ησουσιν',
-  //       },
-  //     },
-  //   },
-  //   ending: 'εω',
-  // },
+  ον: {
+    paradigm: {
+      singular: {
+        first: 'ον',
+        second: 'ες',
+        third: 'εν',
+      },
+      plural: {
+        first: 'ομεν',
+        second: 'ετε',
+        third: 'ον',
+      },
+    },
+    ending: 'ον',
+  },
+  α: {
+    paradigm: {
+      singular: {
+        first: 'α',
+        second: 'ας',
+        third: 'εν',
+      },
+      plural: {
+        first: 'αμεν',
+        second: 'ατε',
+        third: 'αν',
+      },
+    },
+    ending: 'α',
+  },
+  ομαι: {
+    paradigm: {
+      singular: {
+        first: 'ομαι',
+        second: 'ῃ',
+        third: 'εται',
+      },
+      plural: {
+        first: 'ομεθα',
+        second: 'εσθε',
+        third: 'ονται',
+      },
+    },
+    ending: 'ομαι',
+  },
+  ομην: {
+    paradigm: {
+      singular: {
+        first: 'ομην',
+        second: 'ου',
+        third: 'ετο',
+      },
+      plural: {
+        first: 'ομεθα',
+        second: 'εσθε',
+        third: 'οντο',
+      },
+    },
+    ending: 'ομην',
+  },
+  αμην: {
+    paradigm: {
+      singular: {
+        first: 'αμην',
+        second: 'ω',
+        third: 'ατο',
+      },
+      plural: {
+        first: 'αμεθα',
+        second: 'ασθε',
+        third: 'αντο',
+      },
+    },
+    ending: 'αμην',
+  },
+  ε: {
+    paradigm: {
+      singular: {
+        first: null,
+        second: 'ε',
+        third: 'ετω',
+      },
+      plural: {
+        first: null,
+        second: 'ετε',
+        third: 'ετωσαν',
+      },
+    },
+    ending: 'ε',
+  },
+  σον: {
+    paradigm: {
+      singular: {
+        first: null,
+        second: 'ον',
+        third: 'ατω',
+      },
+      plural: {
+        first: null,
+        second: 'ατε',
+        third: 'ατωσαν',
+      },
+    },
+    ending: 'σον',
+  },
+  ου: {
+    paradigm: {
+      singular: {
+        first: null,
+        second: 'ου',
+        third: 'εσθω',
+      },
+      plural: {
+        first: null,
+        second: 'εσθε',
+        third: 'εσθωσαν',
+      },
+    },
+    ending: 'ου',
+  },
+  αι: {
+    paradigm: {
+      singular: {
+        first: null,
+        second: 'αι',
+        third: 'ασθω',
+      },
+      plural: {
+        first: null,
+        second: 'ασθε',
+        third: 'ασθωσαν',
+      },
+    },
+    ending: 'αι',
+  },
+  ην: {
+    paradigm: {
+      singular: {
+        first: 'ην',
+        second: 'ης',
+        third: 'η',
+      },
+      plural: {
+        first: 'ημεν',
+        second: 'ητε',
+        third: 'ησαν',
+      },
+    },
+    ending: 'ην',
+  },
+  ητι: {
+    paradigm: {
+      singular: {
+        first: null,
+        second: 'ητι',
+        third: 'ητω',
+      },
+      plural: {
+        first: null,
+        second: 'ητε',
+        third: 'ητωσαν',
+      },
+    },
+    ending: 'ητι',
+  },
+  ηναι: null,
+  ειν: null,
+  εσθαι: null,
+  ασθαι: null,
+};
+
+export const standardEndings: (
+  Record<VerbTense, Record<VerbVoice, Record<VerbMood, VerbEnding | null> | null>>
+) = {
+  present: {
+    active: {
+      indicative: 'ω',
+      imperative: 'ε',
+      infinitive: 'ειν',
+      participle: null,
+      subjunctive: null,
+    },
+    middle: {
+      indicative: 'ομαι',
+      imperative: 'ου',
+      infinitive: 'εσθαι',
+      participle: null,
+      subjunctive: null,
+    },
+    passive: null,
+  },
+  imperfect: {
+    active: {
+      indicative: 'ον',
+      imperative: 'ε',
+      infinitive: 'ειν',
+      participle: null,
+      subjunctive: null,
+    },
+    middle: {
+      indicative: 'ομην',
+      imperative: 'ου',
+      infinitive: 'εσθαι',
+      participle: null,
+      subjunctive: null,
+    },
+    passive: null,
+  },
+  aorist: {
+    active: {
+      indicative: 'α',
+      imperative: 'ον',
+      infinitive: 'αι',
+      participle: null,
+      subjunctive: null,
+    },
+    middle: {
+      indicative: 'αμην',
+      imperative: 'αι',
+      infinitive: 'ασθαι',
+      participle: null,
+      subjunctive: null,
+    },
+    passive: {
+      indicative: 'ην',
+      imperative: 'ητι',
+      infinitive: 'ηναι',
+      participle: null,
+      subjunctive: null,
+    },
+  },
+  future: {
+    active: {
+      indicative: 'ω',
+      imperative: null,
+      infinitive: null,
+      participle: null,
+      subjunctive: null,
+    },
+    middle: {
+      indicative: 'ομαι',
+      imperative: null,
+      infinitive: null,
+      participle: null,
+      subjunctive: null,
+    },
+    passive: {
+      indicative: 'ομαι',
+      imperative: null,
+      infinitive: null,
+      participle: null,
+      subjunctive: null,
+    },
+  },
+};
+
+export const tenseMarkers: (
+  Partial<Record<
+  VerbTense,
+  Partial<Record<
+  VerbVoice,
+  Partial<Record<
+  VerbMood,
+  string
+  >>
+  >>
+  >>
+) = {
+  future: {
+    active: {
+      indicative: 'σ',
+    },
+    middle: {
+      indicative: 'σ',
+    },
+    passive: {
+      indicative: 'θησ',
+    },
+  },
+  aorist: {
+    active: {
+      indicative: 'σ',
+      imperative: 'σ',
+      infinitive: 'σ',
+      subjunctive: 'σ',
+    },
+    middle: {
+      indicative: 'σ',
+      imperative: 'σ',
+      infinitive: 'σ',
+      subjunctive: 'σ',
+    },
+    passive: {
+      indicative: 'θ',
+    },
+  },
 };
 
 export default paradigms;
