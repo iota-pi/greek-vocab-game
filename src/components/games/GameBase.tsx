@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 import type {
+  GameCategory,
   GameComponentProps,
   Report,
   WordWithParsing,
@@ -14,15 +15,19 @@ import StartGameDialog from '../StartGameDialog';
 import GameHeader from '../GameHeader';
 
 function GameBase<T>({
+  category,
   gameComponent: GameComponent,
   formatter,
   numQuestions,
   pickWord,
+  title,
 }: {
+  category: GameCategory,
   gameComponent: FC<GameComponentProps<T>>,
   formatter: (form: T) => string,
   numQuestions: number,
   pickWord: () => WordWithParsing<T>,
+  title: string,
 }) {
   const [currentWord, setCurrentWord] = useState(pickWord());
   const [score, setScore] = useState(0);
@@ -116,8 +121,8 @@ function GameBase<T>({
           </>
         ) : (
           <StartGameDialog
-            category="nouns"
-            title="Greek Noun Parsing"
+            category={category}
+            title={title}
             onStart={handleStart}
             report={report}
             endTime={endTime}

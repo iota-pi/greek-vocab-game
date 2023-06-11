@@ -59,6 +59,8 @@ function pickWord(): WordWithParsing<VerbParsing> {
 function PresentVerbsPage() {
   return (
     <GameBase
+      category="indicative"
+      title="Active Indicative Verbs"
       formatter={(
         parsing => (
           [

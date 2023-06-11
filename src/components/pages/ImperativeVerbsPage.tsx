@@ -62,6 +62,8 @@ function pickWord(): WordWithParsing<VerbParsing> {
 function ImperativeVerbs() {
   return (
     <GameBase
+      category="imperative"
+      title="Imperative Verbs"
       formatter={(
         parsing => (
           [

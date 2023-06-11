@@ -61,6 +61,8 @@ function pickWord(): WordWithParsing<VerbParsing> {
 function InfinitiveVerbsPage() {
   return (
     <GameBase
+      category="infinitive"
+      title="Infinitive Verbs"
       formatter={(
         parsing => (
           [

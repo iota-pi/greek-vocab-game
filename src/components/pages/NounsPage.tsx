@@ -43,6 +43,8 @@ function pickWord(): WordWithParsing<NounParsing> {
 function NounsPage() {
   return (
     <GameBase
+      category="nouns"
+      title="Nouns (1st & 2nd declension)"
       formatter={(
         parsing => (
           [
