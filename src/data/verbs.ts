@@ -19,7 +19,14 @@ const rawVerbs: VerbData[] = [
     principalParts: {
       future: {
         stem: 'ἐ',
-        ending: 'ομαι',
+        endings: {
+          active: {
+            indicative: 'ομαι',
+          },
+          middle: {
+            indicative: 'ομαι',
+          },
+        },
       },
     },
     overrides: {
@@ -74,7 +81,6 @@ const rawVerbs: VerbData[] = [
     principalParts: {
       future: {
         stem: 'εὑρη',
-        ending: 'ω',
       },
     },
   },
@@ -83,12 +89,21 @@ const rawVerbs: VerbData[] = [
     lexical: 'ἐχω',
     principalParts: {
       aorist: {
-        stem: 'εἰχ',
-        ending: 'α',
+        stem: 'εσχ',
+        noAugment: true,
+        noTenseMarker: true,
+        endings: {
+          active: {
+            indicative: 'ον',
+          },
+          middle: {
+            indicative: 'ομην',
+          },
+        },
       },
       future: {
         stem: 'ἑχ',
-        ending: 'ω',
+        noAugment: true,
       },
     },
     overrides: {
@@ -147,22 +162,10 @@ const rawVerbs: VerbData[] = [
   {
     word: 'λεγω',
     lexical: 'λεγω',
-    overrides: {
-      indicative: {
-        active: {
-          future: {
-            singular: {
-              first: 'ἐρω',
-              second: 'ἐρεις',
-              third: 'ἐρει',
-            },
-            plural: {
-              first: 'ἐρομεν',
-              second: 'ἐρετε',
-              third: 'ἐρουσιν',
-            },
-          },
-        },
+    principalParts: {
+      future: {
+        stem: 'ἐρε',
+        noTenseMarker: true,
       },
     },
   },
@@ -181,34 +184,14 @@ const rawVerbs: VerbData[] = [
   {
     word: 'καλεω',
     lexical: 'καλεω',
-    overrides: {
-      indicative: {
-        active: {
-          aorist: {
-            singular: {
-              first: 'ἐκαλεσα',
-              second: 'ἐκαλεσας',
-              third: 'ἐκαλεσεν',
-            },
-            plural: {
-              first: 'ἐκαλεσαμεν',
-              second: 'ἐκαλεσατε',
-              third: 'ἐκαλεσαν',
-            },
-          },
-          future: {
-            singular: {
-              first: 'καλεσω',
-              second: 'καλεσεις',
-              third: 'καλεσει',
-            },
-            plural: {
-              first: 'καλεσομεν',
-              second: 'καλεσετε',
-              third: 'καλεσουσιν',
-            },
-          },
-        },
+    principalParts: {
+      aorist: {
+        stem: 'καλεσ',
+        noTenseMarker: true,
+      },
+      future: {
+        stem: 'καλεσ',
+        noTenseMarker: true,
       },
     },
   },
@@ -234,50 +217,30 @@ const rawVerbs: VerbData[] = [
     principalParts: {
       future: {
         stem: 'οἰ',
-        ending: 'ω',
       },
       aoristPassive: {
         stem: 'οἰ',
-        ending: 'ομαι',
+        noAugment: true,
       },
       aorist: {
         stem: 'ἠνεγκ',
-        ending: 'α',
         noTenseMarker: true,
+        noAugment: true,
       },
     },
   },
   {
     word: 'σῳζω',
     lexical: 'σῳζω',
-    overrides: {
-      indicative: {
-        active: {
-          aorist: {
-            singular: {
-              first: 'ἐσωσα',
-              second: 'ἐσωσασ',
-              third: 'ἐσωσεν',
-            },
-            plural: {
-              first: 'ἐσωσαμεν',
-              second: 'ἐσωσατε',
-              third: 'ἐσωσαν',
-            },
-          },
-          future: {
-            singular: {
-              first: 'σωσω',
-              second: 'σωσεις',
-              third: 'σωσει',
-            },
-            plural: {
-              first: 'σωσομεν',
-              second: 'σωσετε',
-              third: 'σωσουσιν',
-            },
-          },
-        },
+    principalParts: {
+      aorist: {
+        stem: 'σω',
+      },
+      future: {
+        stem: 'σω',
+      },
+      aoristPassive: {
+        stem: 'σω',
       },
     },
   },

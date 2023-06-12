@@ -33,7 +33,7 @@ describe('conjugateVerb', () => {
     ['ἐσθιω', 'imperfect', 'active', 'indicative', 'first', 'plural', 'ἠσθιομεν'],
     ['εὑρισκω', 'aorist', 'active', 'indicative', 'second', 'plural', 'ηὑρισξατε'],
     ['ἐχω', 'imperfect', 'active', 'indicative', 'third', 'plural', 'εἰχον'],
-    ['ἐχω', 'aorist', 'active', 'indicative', 'third', 'plural', 'εἰξαν'],
+    ['ἐχω', 'aorist', 'active', 'indicative', 'third', 'plural', 'εσχον'],
     ['ποιεω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἐποιουν'],
     ['ποιεω', 'aorist', 'active', 'indicative', 'first', 'plural', 'ἐποιησαμεν'],
     ['καλεω', 'aorist', 'active', 'indicative', 'first', 'singular', 'ἐκαλεσα'],
@@ -60,6 +60,9 @@ describe('conjugateVerb', () => {
     ['φερω', 'future', 'active', 'indicative', 'second', 'singular', 'οἰσεις'],
     ['φερω', 'future', 'passive', 'indicative', 'second', 'singular', 'οἰθησῃ'],
     ['φερω', 'aorist', 'active', 'indicative', 'second', 'singular', 'ἠνεγκας'],
+    ['σῳζω', 'aorist', 'passive', 'indicative', 'second', 'singular', 'ἐσωθης'],
+    ['σῳζω', 'future', 'passive', 'indicative', 'second', 'singular', 'σωθησῃ'],
+    ['λεγω', 'future', 'active', 'indicative', 'first', 'plural', 'ἐρουμεν'],
   ])('%s, %s, %s, %s, %s, %s = "%s"', (verb, tense, voice, mood, person, number, expected) => {
     const result = conjugateVerb({
       mood,

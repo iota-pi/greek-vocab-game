@@ -52,8 +52,9 @@ export type VerbOverrideParadigms = (
 
 export type PrincipalPartEnding = {
   stem: string,
-  ending: VerbEnding,
+  endings?: Partial<Record<VerbVoice, Partial<Record<VerbMood, VerbEnding>>>>,
   noTenseMarker?: boolean,
+  noAugment?: boolean,
 };
 export type PrincipalParts = {
   aorist?: PrincipalPartEnding,

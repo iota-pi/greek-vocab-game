@@ -41,7 +41,10 @@ export function conjugateVerb({
   }
 
   const baseWord = principalPart?.stem || verb;
-  const paradigm = principalPart?.ending || standardEndings?.[tense]?.[voice]?.[mood];
+  const paradigm = (
+    principalPart?.endings?.[voice]?.[mood]
+    || standardEndings?.[tense]?.[voice]?.[mood]
+  );
   if (!paradigm) {
     return null;
   }
@@ -52,6 +55,8 @@ export function conjugateVerb({
     const ending = getEnding(baseWord);
     const originalStem = baseWord.slice(preposition.length, baseWord.length - ending.length);
     stem = applyAugment(preposition, originalStem, tense, mood);
+  } else if (!principalPart?.noAugment) {
+    stem = applyAugment(preposition, baseWord, tense, mood);
   } else {
     stem = baseWord;
   }
