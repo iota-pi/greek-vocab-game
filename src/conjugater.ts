@@ -56,7 +56,8 @@ export function conjugateVerb({
     const originalStem = baseWord.slice(preposition.length, baseWord.length - ending.length);
     stem = applyAugment(preposition, originalStem, tense, mood);
   } else if (!principalPart?.noAugment) {
-    stem = applyAugment(preposition, baseWord, tense, mood);
+    const originalStem = baseWord.slice(preposition.length);
+    stem = applyAugment(preposition, originalStem, tense, mood);
   } else {
     stem = baseWord;
   }
@@ -77,7 +78,8 @@ export function conjugateVerb({
     return null;
   }
 
-  const result = applyEnding(stem, tenseMarker, conjugatedEnding);
+  const noTenseMarkerLengthening = principalPart?.noTenseLengthening || false;
+  const result = applyEnding(stem, tenseMarker, conjugatedEnding, noTenseMarkerLengthening);
   return result;
 }
 
@@ -152,16 +154,27 @@ export function chooseStringPart(string: string, delimiter = '|') {
   return part;
 }
 
-export function applyEnding(stem: string, tenseMarker: string, endingString: string) {
+export function applyEnding(
+  stem: string,
+  tenseMarker: string,
+  endingString: string,
+  noTenseMarkerLengthening: boolean,
+) {
   const ending = chooseStringPart(endingString);
   const x = '!!!!';
+  let connected = `${stem}${x}${tenseMarker}${ending}`;
+  if (!noTenseMarkerLengthening) {
+    connected = (
+      connected
+        .replace(new RegExp(`ε${x}σ`), `${x}ησ`)
+        .replace(new RegExp(`ε${x}θ`), `${x}ηθ`)
+    );
+  }
   return (
-    `${stem}${x}${tenseMarker}${ending}`
+    connected
       .replace(new RegExp(`[κγχ]${x}σ`), `ξ${x}`)
       .replace(new RegExp(`[πβφ]${x}σ`), `ψ${x}`)
       .replace(new RegExp(`[τδθ]${x}σ`), `σ${x}`)
-      .replace(new RegExp(`ε${x}σ`), `${x}ησ`)
-      .replace(new RegExp(`ε${x}θ`), `${x}ηθ`)
       .replace(new RegExp(`ε${x}ε(?![ιυ])`), `${x}ει`)
       .replace(new RegExp(`ε${x}ει`), `${x}ει`)
       .replace(new RegExp(`ε${x}ο(?![ιυ])`), `${x}ου`)

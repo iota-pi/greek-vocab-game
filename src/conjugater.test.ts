@@ -63,6 +63,8 @@ describe('conjugateVerb', () => {
     ['σῳζω', 'aorist', 'passive', 'indicative', 'second', 'singular', 'ἐσωθης'],
     ['σῳζω', 'future', 'passive', 'indicative', 'second', 'singular', 'σωθησῃ'],
     ['λεγω', 'future', 'active', 'indicative', 'first', 'plural', 'ἐρουμεν'],
+    ['ἐκβαλλω', 'aorist', 'passive', 'indicative', 'first', 'singular', 'ἐξεβληθην'],
+    ['λεγω', 'aorist', 'passive', 'indicative', 'first', 'singular', 'ἐρρεθην'],
   ])('%s, %s, %s, %s, %s, %s = "%s"', (verb, tense, voice, mood, person, number, expected) => {
     const result = conjugateVerb({
       mood,

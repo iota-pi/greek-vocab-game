@@ -167,6 +167,24 @@ const rawVerbs: VerbData[] = [
         stem: 'ἐρε',
         noTenseMarker: true,
       },
+      aorist: {
+        stem: 'εἰπ',
+        noTenseMarker: true,
+        noAugment: true,
+        endings: {
+          active: {
+            indicative: 'ον',
+          },
+          middle: {
+            indicative: 'ομην',
+          },
+        },
+      },
+      aoristPassive: {
+        stem: 'ἐρρε',
+        noAugment: true,
+        noTenseLengthening: true,
+      },
     },
   },
   {
@@ -258,6 +276,32 @@ const rawVerbs: VerbData[] = [
     word: 'ἐκβαλλω',
     lexical: 'ἐκβαλλω',
     preposition: 'ἐκ',
+    principalParts: {
+      future: {
+        stem: 'ἐκβαλ',
+        noTenseMarker: true,
+      },
+      aorist: {
+        stem: 'ἐκβαλ',
+        noTenseMarker: true,
+        endings: {
+          active: {
+            indicative: 'ον',
+          },
+          middle: {
+            indicative: 'ομην',
+          },
+        },
+      },
+      aoristPassive: {
+        stem: 'ἐκβλη',
+        endings: {
+          passive: {
+            indicative: 'ην',
+          },
+        },
+      },
+    },
   },
   {
     word: 'παρακαλεω',

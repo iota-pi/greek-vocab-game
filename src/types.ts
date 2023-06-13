@@ -55,6 +55,7 @@ export type PrincipalPartEnding = {
   endings?: Partial<Record<VerbVoice, Partial<Record<VerbMood, VerbEnding>>>>,
   noTenseMarker?: boolean,
   noAugment?: boolean,
+  noTenseLengthening?: boolean,
 };
 export type PrincipalParts = {
   aorist?: PrincipalPartEnding,
