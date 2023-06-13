@@ -89,6 +89,7 @@ export function getVoiceName(voice: VerbVoice) {
   const mapping: Record<VerbVoice, string> = {
     active: 'Active',
     middle: 'Middle/Passive',
+    passive: 'Passive',
   };
   return mapping[voice];
 }
@@ -97,6 +98,7 @@ export function getShortVoiceName(voice: VerbVoice) {
   const mapping: Record<VerbVoice, string> = {
     active: 'Act',
     middle: 'M/P',
+    passive: 'Pass',
   };
   return mapping[voice];
 }
