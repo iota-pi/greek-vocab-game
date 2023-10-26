@@ -1,8 +1,8 @@
-import { NounCase } from '../types';
+import { Noun } from '../types';
 
 type ParadigmPattern = {
-  singular: Record<NounCase, string>,
-  plural: Record<NounCase, string>,
+  singular: Record<Noun.Case, string>,
+  plural: Record<Noun.Case, string>,
 };
 export type Paradigm = {
   example: string,

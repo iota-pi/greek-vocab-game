@@ -1,11 +1,9 @@
 import { ReactNode, useMemo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import MenuPage from './Menu';
-import NounsPage from './NounsPage';
-import PresentVerbsPage from './PresentVerbsPage';
-import IndicativeVerbs from './IndicativeVerbsPage';
-import InfinitiveVerbs from './InfinitiveVerbsPage';
-import ImperativeVerbs from './ImperativeVerbsPage';
+import GamePage from './GamePage';
+import { GameData, games } from '../games';
+import { Noun, Verb } from '../../types';
 
 export type PageId = (
   | 'menu'
@@ -37,31 +35,31 @@ export const gamePages: Page[] = [
     id: 'nouns',
     path: '/nouns/',
     name: 'Nouns',
-    page: <NounsPage />,
+    page: <GamePage game={games.firstAndSecondNouns as GameData<Noun.Data>} />,
   },
   {
     id: 'present-verbs',
     path: '/present-verbs/',
     name: 'Present Active Indicative Verbs',
-    page: <PresentVerbsPage />,
+    page: <GamePage game={games.verbs as GameData<Verb.Data>} />,
   },
   {
     id: 'indicative',
     path: '/indicative/',
     name: 'Indicative Verbs',
-    page: <IndicativeVerbs />,
+    page: <GamePage game={games.indicative as GameData<Verb.Data>} />,
   },
   {
     id: 'imperative',
     path: '/imperative/',
     name: 'Imperative Verbs',
-    page: <ImperativeVerbs />,
+    page: <GamePage game={games.imperative as GameData<Verb.Data>} />,
   },
   {
     id: 'infinitive',
     path: '/infinitive/',
     name: 'Infinitive Verbs',
-    page: <InfinitiveVerbs />,
+    page: <GamePage game={games.infinitive as GameData<Verb.Data>} />,
   },
 ];
 

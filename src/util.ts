@@ -1,4 +1,4 @@
-import { Gender, NounCase, VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
+import { Noun, Verb, WordNumber } from './types';
 
 export const API_ENDPOINT = (
   'https://s46ipfbb5e.execute-api.ap-southeast-2.amazonaws.com/production'
@@ -28,8 +28,8 @@ export function normaliseColumnName(value: string) {
   return name.toLowerCase();
 }
 
-export function getCaseName(nounCase: NounCase) {
-  const mapping: Record<NounCase, string> = {
+export function getCaseName(nounCase: Noun.Case) {
+  const mapping: Record<Noun.Case, string> = {
     n: 'Nominative',
     g: 'Genitive',
     d: 'Dative',
@@ -46,8 +46,8 @@ export function getNumberName(number: WordNumber) {
   return mapping[number];
 }
 
-export function getPersonName(person: VerbPerson) {
-  const mapping: Record<VerbPerson, string> = {
+export function getPersonName(person: Verb.Person) {
+  const mapping: Record<Verb.Person, string> = {
     first: 'First',
     second: 'Second',
     third: 'Third',
@@ -55,8 +55,8 @@ export function getPersonName(person: VerbPerson) {
   return mapping[person];
 }
 
-export function getGenderName(gender: Gender) {
-  const mapping: Record<Gender, string> = {
+export function getGenderName(gender: Noun.Gender) {
+  const mapping: Record<Noun.Gender, string> = {
     masculine: 'Masculine',
     feminine: 'Feminine',
     neuter: 'Neuter',
@@ -64,8 +64,8 @@ export function getGenderName(gender: Gender) {
   return mapping[gender];
 }
 
-export function getTenseName(tense: VerbTense) {
-  const mapping: Record<VerbTense, string> = {
+export function getTenseName(tense: Verb.Tense) {
+  const mapping: Record<Verb.Tense, string> = {
     aorist: 'Aorist',
     imperfect: 'Imperfect',
     present: 'Present',
@@ -74,8 +74,8 @@ export function getTenseName(tense: VerbTense) {
   return mapping[tense];
 }
 
-export function getMoodName(mood: VerbMood) {
-  const mapping: Record<VerbMood, string> = {
+export function getMoodName(mood: Verb.Mood) {
+  const mapping: Record<Verb.Mood, string> = {
     imperative: 'Imperative',
     indicative: 'Indicative',
     infinitive: 'Infinitive',
@@ -85,8 +85,8 @@ export function getMoodName(mood: VerbMood) {
   return mapping[mood];
 }
 
-export function getVoiceName(voice: VerbVoice) {
-  const mapping: Record<VerbVoice, string> = {
+export function getVoiceName(voice: Verb.Voice) {
+  const mapping: Record<Verb.Voice, string> = {
     active: 'Active',
     middle: 'Middle/Passive',
     passive: 'Passive',
@@ -94,8 +94,8 @@ export function getVoiceName(voice: VerbVoice) {
   return mapping[voice];
 }
 
-export function getShortVoiceName(voice: VerbVoice) {
-  const mapping: Record<VerbVoice, string> = {
+export function getShortVoiceName(voice: Verb.Voice) {
+  const mapping: Record<Verb.Voice, string> = {
     active: 'Act',
     middle: 'M/P',
     passive: 'Pass',

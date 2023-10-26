@@ -1,7 +1,7 @@
-import { VerbMood, VerbParadigmPattern, VerbTense, VerbVoice } from '../types';
+import { Verb } from '../types';
 
 export type Paradigm = {
-  paradigm: VerbParadigmPattern,
+  paradigm: Verb.ParadigmPattern,
   ending: VerbEnding,
 };
 export type VerbEnding = (
@@ -211,7 +211,7 @@ const paradigms: Record<VerbEnding, Paradigm | null> = {
 };
 
 export const standardEndings: (
-  Record<VerbTense, Record<VerbVoice, Record<VerbMood, VerbEnding | null> | null>>
+  Record<Verb.Tense, Record<Verb.Voice, Record<Verb.Mood, VerbEnding | null> | null>>
 ) = {
   present: {
     active: {
@@ -297,11 +297,11 @@ export const standardEndings: (
 
 export const tenseMarkers: (
   Partial<Record<
-  VerbTense,
+  Verb.Tense,
   Partial<Record<
-  VerbVoice,
+  Verb.Voice,
   Partial<Record<
-  VerbMood,
+  Verb.Mood,
   string
   >>
   >>

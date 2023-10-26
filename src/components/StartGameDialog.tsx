@@ -10,7 +10,9 @@ import BackIcon from '@mui/icons-material/ChevronLeft';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import type {
+  BaseData,
   GameCategory,
+  Parsing,
   Report,
 } from '../types';
 import HighScores from './HighScores';
@@ -20,7 +22,7 @@ import Timer from './Timer';
 
 const DEFAULT_TIME = 1000 * 60 * 60;
 
-function StartGameDialog<T>({
+function StartGameDialog<T extends BaseData>({
   category,
   endTime,
   formatter,
@@ -33,7 +35,7 @@ function StartGameDialog<T>({
 }: {
   category: GameCategory,
   endTime: Date | null,
-  formatter: (form: T) => string,
+  formatter: (form: Parsing<T>) => string,
   onStart: () => void,
   report: Report<T>[],
   score: number,

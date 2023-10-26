@@ -1,19 +1,20 @@
 import paradigms, { ParadigmName, type NounEnding } from './data/nounParadigms';
 import nouns from './data/nouns';
-import type { Article, Gender, NounCase, WordNumber } from './types';
+import type { Article, Noun, WordNumber } from './types';
 
 export function declineNoun({
   noun,
   nounCase,
   number,
 }: {
-  noun: string,
-  nounCase: NounCase,
+  noun: Noun.Data,
+  nounCase: Noun.Case,
   number: WordNumber,
 }) {
-  const paradigm = getParadigm(noun);
-  const ending = getEnding(noun);
-  const stem = noun.slice(0, noun.length - ending.length);
+  const word = noun.word;
+  const paradigm = getParadigm(word);
+  const ending = getEnding(word);
+  const stem = word.slice(0, word.length - ending.length);
   const newEnding = paradigm.pattern[number][nounCase];
   const result = `${stem}${newEnding}`;
   return result;
@@ -47,7 +48,7 @@ export function getEnding(noun: string) {
 
 export function getGender(noun: string) {
   const nounData = getNounData(noun);
-  const mapping: Record<Article, Gender> = {
+  const mapping: Record<Article, Noun.Gender> = {
     ἡ: 'feminine',
     ὁ: 'masculine',
     το: 'neuter',

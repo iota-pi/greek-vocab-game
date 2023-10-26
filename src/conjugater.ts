@@ -1,14 +1,14 @@
 import paradigms, { standardEndings, tenseMarkers, type VerbEnding } from './data/verbParadigms';
-import verbs, { VerbData } from './data/verbs';
-import type { PrincipalPart, VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
+import verbs from './data/verbs';
+import type { Verb, WordNumber } from './types';
 
 export type ConjugateVerbParams = {
-  mood: VerbMood,
+  mood: Verb.Mood,
   number: WordNumber,
-  person: VerbPerson,
-  tense: VerbTense,
-  verb: string,
-  voice: VerbVoice,
+  person: Verb.Person,
+  tense: Verb.Tense,
+  verb: Verb.Data,
+  voice: Verb.Voice,
 };
 
 export function conjugateVerb({
@@ -19,8 +19,7 @@ export function conjugateVerb({
   verb,
   voice,
 }: ConjugateVerbParams): string | null {
-  const data = getVerbData(verb);
-  const override = data.overrides?.[mood]?.[voice]?.[tense];
+  const override = verb.overrides?.[mood]?.[voice]?.[tense];
   if (override) {
     const overrideResult = (
       typeof override === 'string'
@@ -31,16 +30,16 @@ export function conjugateVerb({
       return overrideResult;
     }
   }
-  if (data.omit?.includes(tense)) {
-    throw new Error(`Cannot conjugate ${verb} with ${tense} tense`);
+  if (verb.omit?.includes(tense)) {
+    throw new Error(`Cannot conjugate ${verb.word} with ${tense} tense`);
   }
 
-  const principalPart = getPrincipalPart(data, tense, voice);
-  if (!principalPart && data.uniqueParadigm) {
+  const principalPart = getPrincipalPart(verb, tense, voice);
+  if (!principalPart && verb.uniqueParadigm) {
     return null;
   }
 
-  const baseWord = principalPart?.stem || verb;
+  const baseWord = principalPart?.stem || verb.word;
   const paradigm = (
     principalPart?.endings?.[voice]?.[mood]
     || standardEndings?.[tense]?.[voice]?.[mood]
@@ -49,7 +48,7 @@ export function conjugateVerb({
     return null;
   }
 
-  const preposition = getPreposition(data);
+  const preposition = getPreposition(verb);
   let stem: string;
   if (!principalPart) {
     const ending = getEnding(baseWord);
@@ -97,8 +96,12 @@ export function checkConjugation(toCheck: string, params: ConjugateVerbParams): 
   return parts.includes(toCheck);
 }
 
-export function getPrincipalPart(verb: VerbData, tense: VerbTense, voice: VerbVoice) {
-  let principalPart: PrincipalPart;
+export function getPrincipalPart(
+  verb: Verb.Data,
+  tense: Verb.Tense,
+  voice: Verb.Voice,
+) {
+  let principalPart: Verb.PrincipalPart;
   if (
     voice === 'passive'
     && (tense === 'aorist' || tense === 'future')
@@ -140,7 +143,7 @@ export function getEnding(verb: string) {
   throw new Error(`Unrecognised ending ${verb}`);
 }
 
-export function getPreposition(data: VerbData) {
+export function getPreposition(data: Verb.Data) {
   return data.preposition ?? '';
 }
 
@@ -185,12 +188,12 @@ export function applyEnding(
   );
 }
 
-export function getAugment(tense: VerbTense, mood: VerbMood) {
+export function getAugment(tense: Verb.Tense, mood: Verb.Mood) {
   if (mood !== 'indicative') {
     return '';
   }
 
-  const map: Record<VerbTense, string> = {
+  const map: Record<Verb.Tense, string> = {
     aorist: 'ἐ',
     imperfect: 'ἐ',
     present: '',
@@ -199,7 +202,7 @@ export function getAugment(tense: VerbTense, mood: VerbMood) {
   return map[tense];
 }
 
-export function applyAugment(preposition: string, stem: string, tense: VerbTense, mood: VerbMood) {
+export function applyAugment(preposition: string, stem: string, tense: Verb.Tense, mood: Verb.Mood) {
   const x = '!!!!';
   const augment = getAugment(tense, mood);
   const modifiedPreposition = !augment ? preposition : (

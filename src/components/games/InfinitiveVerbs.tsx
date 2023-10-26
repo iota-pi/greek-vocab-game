@@ -7,40 +7,36 @@ import {
 } from '@mui/material';
 import { useCallback } from 'react';
 import type {
-  VerbPerson,
+  Verb,
   WordNumber,
-  VerbParsing,
-  VerbTense,
-  VerbMood,
-  VerbVoice,
   GameComponentProps,
 } from '../../types';
 import { getShortVoiceName, getTenseName, getVoiceName } from '../../util';
 import { conjugateVerb } from '../../conjugater';
 
-const TENSES: VerbTense[] = ['present', 'aorist'];
-const VOICES: VerbVoice[] = ['active', 'middle'];
+const TENSES: Verb.Tense[] = ['present', 'aorist'];
+const VOICES: Verb.Voice[] = ['active', 'middle'];
 
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 100;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
-const person: VerbPerson = 'first';
+const person: Verb.Person = 'first';
 const number: WordNumber = 'singular';
-const mood: VerbMood = 'infinitive';
+const mood: Verb.Mood = 'infinitive';
 
-function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsing>) {
+function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data>) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
 
   const checkAnswer = useCallback(
     ({ tense, voice } : {
-      tense: VerbTense,
-      voice: VerbVoice,
+      tense: Verb.Tense,
+      voice: Verb.Voice,
     }) => {
-      const fullGuess: VerbParsing = {
+      const fullGuess: Verb.Parsing = {
         mood,
         number,
         person,
@@ -50,7 +46,7 @@ function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
 
       let correct = false;
       const declinedGuess = conjugateVerb({
-        verb: currentWord.lexical,
+        verb: currentWord.data,
         ...fullGuess,
       });
       if (declinedGuess === currentWord.word) {

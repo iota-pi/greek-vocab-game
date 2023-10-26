@@ -1,8 +1,8 @@
-import { declineNoun } from './decliner';
-import { NounCase, WordNumber } from './types';
+import { declineNoun, getNounData } from './decliner';
+import { Noun, WordNumber } from './types';
 
 describe('declineNoun', () => {
-  it.each<[string, NounCase, WordNumber, string]>([
+  it.each<[string, Noun.Case, WordNumber, string]>([
     ['λογος', 'd', 'singular', 'λογῳ'],
     ['λογος', 'g', 'plural', 'λογων'],
     ['λογος', 'a', 'plural', 'λογους'],
@@ -17,7 +17,7 @@ describe('declineNoun', () => {
     ['δοξα', 'd', 'singular', 'δοξῃ'],
   ])('declineNoun(%s, %s, %s) = "%s"', (noun, nounCase, number, expected) => {
     const result = declineNoun({
-      noun,
+      noun: getNounData(noun),
       nounCase,
       number,
     });

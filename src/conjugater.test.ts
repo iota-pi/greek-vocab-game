@@ -1,8 +1,8 @@
-import { checkConjugation, conjugateVerb } from './conjugater';
-import { VerbMood, VerbPerson, VerbTense, VerbVoice, WordNumber } from './types';
+import { checkConjugation, conjugateVerb, getVerbData } from './conjugater';
+import { Verb, WordNumber } from './types';
 
 describe('conjugateVerb', () => {
-  it.each<[string, VerbPerson, WordNumber, string]>([
+  it.each<[string, Verb.Person, WordNumber, string]>([
     ['λυω', 'first', 'singular', 'λυω'],
     ['λυω', 'second', 'singular', 'λυεις'],
     ['λυω', 'third', 'singular', 'λυει'],
@@ -21,12 +21,12 @@ describe('conjugateVerb', () => {
       tense: 'present',
       voice: 'active',
       mood: 'indicative',
-      verb,
+      verb: getVerbData(verb),
     });
     expect(result).toEqual(expected);
   });
 
-  it.each<[string, VerbTense, VerbVoice, VerbMood, VerbPerson, WordNumber, string | null]>([
+  it.each<[string, Verb.Tense, Verb.Voice, Verb.Mood, Verb.Person, WordNumber, string | null]>([
     ['λυω', 'imperfect', 'active', 'indicative', 'first', 'singular', 'ἐλυον'],
     ['λυω', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ἐλυες'],
     ['λυω', 'aorist', 'active', 'indicative', 'third', 'singular', 'ἐλυσεν'],
@@ -44,7 +44,8 @@ describe('conjugateVerb', () => {
     ['ὑπαγω', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ὑπηγες'],
     ['λυω', 'present', 'active', 'imperative', 'first', 'singular', null],
     ['λυω', 'present', 'active', 'imperative', 'second', 'singular', 'λυε'],
-    ['ὑπαγω', 'aorist', 'middle', 'imperative', 'third', 'plural', 'ὑπαξασθωσαν'],
+    ['ὑπαγω', 'aorist', 'active', 'indicative', 'second', 'singular', 'ὑπηγαγες'],
+    ['ὑπαγω', 'aorist', 'passive', 'imperative', 'third', 'plural', 'ὑπηχθητωσαν'],
     ['λυω', 'aorist', 'active', 'infinitive', 'first', 'plural', 'λυσαι'],
     ['λυω', 'aorist', 'middle', 'infinitive', 'first', 'plural', 'λυσασθαι'],
     ['λυω', 'future', 'middle', 'infinitive', 'first', 'plural', null],
@@ -71,13 +72,13 @@ describe('conjugateVerb', () => {
       number,
       person,
       tense,
-      verb,
+      verb: getVerbData(verb),
       voice,
     });
     expect(result).toEqual(expected);
   });
 
-  it.each<[string, VerbTense, VerbVoice, VerbMood, VerbPerson, WordNumber, string]>([
+  it.each<[string, Verb.Tense, Verb.Voice, Verb.Mood, Verb.Person, WordNumber, string]>([
     ['εἰμι', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ἠς'],
     ['εἰμι', 'imperfect', 'active', 'indicative', 'second', 'singular', 'ἠσθα'],
     ['εἰμι', 'imperfect', 'active', 'indicative', 'first', 'plural', 'ἠμεν'],
@@ -90,7 +91,7 @@ describe('conjugateVerb', () => {
         number,
         person,
         tense,
-        verb,
+        verb: getVerbData(verb),
         voice,
       },
     );

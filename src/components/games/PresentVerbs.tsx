@@ -8,15 +8,14 @@ import {
 } from '@mui/material';
 import { Fragment, useCallback } from 'react';
 import type {
-  VerbPerson,
+  Verb,
   WordNumber,
-  VerbParsing,
   GameComponentProps,
 } from '../../types';
 import { getNumberName, getPersonName } from '../../util';
 import { conjugateVerb } from '../../conjugater';
 
-const PERSONS: VerbPerson[] = ['first', 'second', 'third'];
+const PERSONS: Verb.Person[] = ['first', 'second', 'third'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
 
 const COL_WIDTH = 140;
@@ -24,17 +23,17 @@ const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
-function PresentVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsing>) {
+function PresentVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data>) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
 
   const checkAnswer = useCallback(
-    ({ person, number }: { person: VerbPerson, number: WordNumber }) => {
+    ({ person, number }: { person: Verb.Person, number: WordNumber }) => {
       const tense = 'present';
       const mood = 'indicative';
       const voice = 'active';
-      const fullGuess: VerbParsing = {
+      const fullGuess: Verb.Parsing = {
         person,
         number,
         mood,
@@ -45,7 +44,7 @@ function PresentVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsing>
       let correct = false;
       const declinedGuess = conjugateVerb({
         ...fullGuess,
-        verb: currentWord.lexical,
+        verb: currentWord.data,
       });
       if (declinedGuess === currentWord.word) {
         correct = true;

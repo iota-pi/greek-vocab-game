@@ -6,15 +6,17 @@ import {
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 import type {
+  BaseData,
   GameCategory,
   GameComponentProps,
+  Parsing,
   Report,
   WordWithParsing,
 } from '../../types';
 import StartGameDialog from '../StartGameDialog';
 import GameHeader from '../GameHeader';
 
-function GameBase<T>({
+function GameBase<T extends BaseData>({
   category,
   gameComponent: GameComponent,
   formatter,
@@ -24,7 +26,7 @@ function GameBase<T>({
 }: {
   category: GameCategory,
   gameComponent: FC<GameComponentProps<T>>,
-  formatter: (form: T) => string,
+  formatter: (form: Parsing<T>) => string,
   numQuestions: number,
   pickWord: () => WordWithParsing<T>,
   title: string,
@@ -50,7 +52,7 @@ function GameBase<T>({
   );
 
   const handleAnswer = useCallback(
-    (correct: boolean, chosen: T) => {
+    (correct: boolean, chosen: Parsing<T>) => {
       setTotal(t => t + 1);
       if (correct) {
         setScore(s => s + 1);
@@ -59,7 +61,7 @@ function GameBase<T>({
       const newReport: Report<T> = {
         word: currentWord.word,
         correct,
-        expected: { ...currentWord },
+        expected: currentWord.parsing,
         given: chosen,
       };
       setReport(r => [...r, newReport]);

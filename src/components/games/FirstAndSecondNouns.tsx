@@ -9,46 +9,41 @@ import {
 import { Fragment, useCallback } from 'react';
 import { declineNoun } from '../../decliner';
 import type {
-  Gender,
-  NounCase,
-  NounParsing,
+  Noun,
   WordNumber,
   GameComponentProps,
 } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
 
-const CASES: NounCase[] = ['n', 'g', 'd', 'a'];
+const CASES: Noun.Case[] = ['n', 'g', 'd', 'a'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const GENDERS: Gender[] = ['masculine', 'feminine', 'neuter'];
+const GENDERS: Noun.Gender[] = ['masculine', 'feminine', 'neuter'];
 
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
-function Nouns({ currentWord, onAnswer }: GameComponentProps<NounParsing>) {
+function FirstAndSecondNouns(
+  {
+    currentWord,
+    onAnswer,
+  }: GameComponentProps<Noun.Data>,
+) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
 
   const checkAnswer = useCallback(
-    ({
-      nounCase,
-      number,
-      gender,
-    }: {
-      nounCase: NounCase,
-      number: WordNumber,
-      gender: Gender,
-    }) => {
+    ({ nounCase, number, gender }: Noun.Parsing) => {
       let correct = false;
       const declinedGuess = declineNoun({
-        noun: currentWord.lexical,
+        noun: currentWord.data,
         nounCase,
         number,
       });
       if (
-        gender === currentWord.gender
+        gender === currentWord.parsing.gender
         && declinedGuess === currentWord.word
       ) {
         correct = true;
@@ -143,4 +138,4 @@ function Nouns({ currentWord, onAnswer }: GameComponentProps<NounParsing>) {
   );
 }
 
-export default Nouns;
+export default FirstAndSecondNouns;

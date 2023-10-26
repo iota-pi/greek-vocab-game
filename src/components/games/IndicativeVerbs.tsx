@@ -8,18 +8,16 @@ import {
 } from '@mui/material';
 import { Fragment, useCallback } from 'react';
 import type {
-  VerbPerson,
+  Verb,
   WordNumber,
-  VerbParsing,
-  VerbTense,
   GameComponentProps,
 } from '../../types';
 import { getNumberName, getPersonName, getTenseName } from '../../util';
 import { conjugateVerb } from '../../conjugater';
 
-const PERSONS: VerbPerson[] = ['first', 'second', 'third'];
+const PERSONS: Verb.Person[] = ['first', 'second', 'third'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const TENSES: VerbTense[] = ['present', 'imperfect', 'aorist', 'future'];
+const TENSES: Verb.Tense[] = ['present', 'imperfect', 'aorist', 'future'];
 const mood = 'indicative';
 const voice = 'active';
 
@@ -28,7 +26,7 @@ const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
-function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsing>) {
+function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data>) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
@@ -39,11 +37,11 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
       person,
       number,
     }: {
-      tense: VerbTense,
-      person: VerbPerson,
+      tense: Verb.Tense,
+      person: Verb.Person,
       number: WordNumber,
     }) => {
-      const fullGuess: VerbParsing = {
+      const fullGuess: Verb.Parsing = {
         mood,
         number,
         person,
@@ -53,7 +51,7 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
 
       let correct = false;
       const declinedGuess = conjugateVerb({
-        verb: currentWord.lexical,
+        verb: currentWord.data,
         ...fullGuess,
       });
       if (declinedGuess === currentWord.word) {

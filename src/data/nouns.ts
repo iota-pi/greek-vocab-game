@@ -1,16 +1,7 @@
-import { Article } from '../types';
+import { Noun } from '../types';
 import { applyWeightings } from '../util';
 
-type NounData = {
-  lexical: string,
-  word: string,
-  genitive: string,
-  article: Article,
-  singular?: boolean,
-  weight?: number,
-};
-
-const rawNouns: NounData[] = [
+const rawNouns: Noun.Data[] = [
   {
     lexical: 'ἀγγελος, ου, ὁ',
     word: 'ἀγγελος',

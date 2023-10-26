@@ -6,16 +6,16 @@ import {
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CrossIcon from '@mui/icons-material/Close';
-import { Report } from '../types';
+import { BaseData, Parsing, Report } from '../types';
 
 
-function ReportDisplay<P>(
+function ReportDisplay<T extends BaseData>(
   {
     formatter,
     report,
   }: {
-    formatter: (form: P) => string,
-    report: Report<P>[],
+    formatter: (form: Parsing<T>) => string,
+    report: Report<T>[],
   },
 ) {
   return (

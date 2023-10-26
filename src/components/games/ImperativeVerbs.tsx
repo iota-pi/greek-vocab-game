@@ -8,30 +8,26 @@ import {
 } from '@mui/material';
 import { Fragment, useCallback } from 'react';
 import type {
-  VerbPerson,
+  Verb,
   WordNumber,
-  VerbParsing,
-  VerbTense,
-  VerbMood,
-  VerbVoice,
   GameComponentProps,
 } from '../../types';
 import { getNumberName, getPersonName, getShortVoiceName, getTenseName, getVoiceName } from '../../util';
 import { conjugateVerb } from '../../conjugater';
 
-const PERSONS: VerbPerson[] = ['second', 'third'];
+const PERSONS: Verb.Person[] = ['second', 'third'];
 const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const TENSES: VerbTense[] = ['present', 'aorist'];
-const VOICES: VerbVoice[] = ['active', 'middle'];
+const TENSES: Verb.Tense[] = ['present', 'aorist'];
+const VOICES: Verb.Voice[] = ['active', 'middle'];
 
-const mood: VerbMood = 'imperative';
+const mood: Verb.Mood = 'imperative';
 
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
-function ImperativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsing>) {
+function ImperativeVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data>) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
@@ -39,11 +35,11 @@ function ImperativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
   const checkAnswer = useCallback(
     ({ number, person, tense, voice } : {
       number: WordNumber,
-      person: VerbPerson,
-      tense: VerbTense,
-      voice: VerbVoice,
+      person: Verb.Person,
+      tense: Verb.Tense,
+      voice: Verb.Voice,
     }) => {
-      const fullGuess: VerbParsing = {
+      const fullGuess: Verb.Parsing = {
         mood,
         number,
         person,
@@ -53,7 +49,7 @@ function ImperativeVerbs({ currentWord, onAnswer }: GameComponentProps<VerbParsi
       let correct = false;
       const declinedGuess = conjugateVerb({
         ...fullGuess,
-        verb: currentWord.lexical,
+        verb: currentWord.data,
       });
       if (declinedGuess === currentWord.word) {
         correct = true;

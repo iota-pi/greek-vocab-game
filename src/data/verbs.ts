@@ -1,18 +1,8 @@
-import type { PrincipalParts, VerbOverrideParadigms, VerbTense } from '../types';
+import type { Verb } from '../types';
 import { applyWeightings } from '../util';
 
-export type VerbData = {
-  lexical: string,
-  word: string,
-  overrides?: VerbOverrideParadigms,
-  omit?: VerbTense[],
-  preposition?: string,
-  principalParts?: PrincipalParts,
-  weight?: number,
-  uniqueParadigm?: boolean,
-};
 
-const rawVerbs: VerbData[] = [
+const rawVerbs: Verb.Data[] = [
   {
     word: 'εἰμι',
     lexical: 'εἰμι',
@@ -317,6 +307,36 @@ const rawVerbs: VerbData[] = [
     word: 'ὑπαγω',
     lexical: 'ὑπαγω',
     preposition: 'ὑπ',
+    principalParts: {
+      aorist: {
+        stem: 'ὑπαγαγ',
+        noTenseMarker: true,
+        endings: {
+          active: {
+            indicative: 'ον',
+            imperative: 'σον',
+            infinitive: 'εσθαι',
+          },
+          middle: {
+            indicative: 'ομην',
+            imperative: 'ου',
+            infinitive: 'ειν',
+          },
+        },
+      },
+      aoristPassive: {
+        stem: 'ὑπἠχθ',
+        noTenseMarker: true,
+        endings: {
+          passive: {
+            indicative: 'ην',
+            imperative: 'ητι',
+            infinitive: 'ηναι',
+            // subjunctive: '̂ω',
+          },
+        },
+      },
+    }
   },
 ];
 
