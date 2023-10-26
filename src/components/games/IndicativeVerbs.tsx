@@ -9,15 +9,11 @@ import {
 import { Fragment, useCallback } from 'react';
 import type {
   Verb,
-  WordNumber,
   GameComponentProps,
 } from '../../types';
 import { getNumberName, getPersonName, getTenseName } from '../../util';
 import { conjugateVerb } from '../../conjugater';
 
-const PERSONS: Verb.Person[] = ['first', 'second', 'third'];
-const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const TENSES: Verb.Tense[] = ['present', 'imperfect', 'aorist', 'future'];
 const mood = 'indicative';
 const voice = 'active';
 
@@ -26,7 +22,11 @@ const COL_WIDTH_SM = 80;
 const FIRST_COL_WIDTH = 80;
 const FIRST_COL_WIDTH_SM = 50;
 
-function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data>) {
+function IndicativeVerbs({
+  currentWord,
+  onAnswer,
+  params,
+}: GameComponentProps<Verb.Data>) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
@@ -36,11 +36,7 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data
       tense,
       person,
       number,
-    }: {
-      tense: Verb.Tense,
-      person: Verb.Person,
-      number: WordNumber,
-    }) => {
+    }: Pick<Verb.Parsing, 'tense' | 'person' | 'number'>) => {
       const fullGuess: Verb.Parsing = {
         mood,
         number,
@@ -68,7 +64,7 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data
       <Stack direction="row" spacing={2}>
         <Box minWidth={firstColWidth} />
 
-        {TENSES.map(tense => (
+        {params.tense.map(tense => (
           <Box
             alignItems="center"
             display="flex"
@@ -87,11 +83,11 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data
         ))}
       </Stack>
 
-      {NUMBERS.map(number => (
+      {params.number.map(number => (
         <Fragment key={number}>
           <Divider />
 
-          {PERSONS.map((person, i) => {
+          {params.person.map((person, i) => {
             const numberName = getNumberName(number);
             const personName = getPersonName(person);
             const key = `${person}-${number}`;
@@ -114,7 +110,7 @@ function IndicativeVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data
                   )}
                 </Box>
 
-                {TENSES.map(tense => {
+                {params.tense.map(tense => {
                   const innerKey = `${key}-${tense}`;
                   return (
                     <Button

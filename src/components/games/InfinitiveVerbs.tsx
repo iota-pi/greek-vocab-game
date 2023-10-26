@@ -14,9 +14,6 @@ import type {
 import { getShortVoiceName, getTenseName, getVoiceName } from '../../util';
 import { conjugateVerb } from '../../conjugater';
 
-const TENSES: Verb.Tense[] = ['present', 'aorist'];
-const VOICES: Verb.Voice[] = ['active', 'middle'];
-
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 100;
 const FIRST_COL_WIDTH = 80;
@@ -26,16 +23,17 @@ const person: Verb.Person = 'first';
 const number: WordNumber = 'singular';
 const mood: Verb.Mood = 'infinitive';
 
-function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data>) {
+function InfinitiveVerbs({
+  currentWord,
+  onAnswer,
+  params,
+}: GameComponentProps<Verb.Data>) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const colWidth = sm ? COL_WIDTH_SM : COL_WIDTH;
   const firstColWidth = sm ? FIRST_COL_WIDTH_SM : FIRST_COL_WIDTH;
 
   const checkAnswer = useCallback(
-    ({ tense, voice } : {
-      tense: Verb.Tense,
-      voice: Verb.Voice,
-    }) => {
+    ({ tense, voice }: Pick<Verb.Parsing, 'tense' | 'voice'>) => {
       const fullGuess: Verb.Parsing = {
         mood,
         number,
@@ -63,7 +61,7 @@ function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data
       <Stack direction="row" spacing={2}>
         <Box minWidth={firstColWidth} />
 
-        {TENSES.map(tense => (
+        {params.tense.map(tense => (
           <Box
             alignItems="center"
             display="flex"
@@ -82,7 +80,7 @@ function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data
         ))}
       </Stack>
 
-      {VOICES.map((voice, i) => {
+      {params.voice.map((voice, i) => {
         const voiceName = sm ? getShortVoiceName(voice) : getVoiceName(voice);
         return (
           <Stack direction="row" spacing={2} key={voice}>
@@ -99,7 +97,7 @@ function InfinitiveVerbs({ currentWord, onAnswer }: GameComponentProps<Verb.Data
               )}
             </Box>
 
-            {TENSES.map(tense => {
+            {params.tense.map(tense => {
               const tenseName = getTenseName(tense);
               const innerKey = `${voice}-${tense}`;
               return (

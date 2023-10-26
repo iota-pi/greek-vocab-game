@@ -10,14 +10,9 @@ import { Fragment, useCallback } from 'react';
 import { declineNoun } from '../../decliner';
 import type {
   Noun,
-  WordNumber,
   GameComponentProps,
 } from '../../types';
 import { getCaseName, getGenderName, getNumberName } from '../../util';
-
-const CASES: Noun.Case[] = ['n', 'g', 'd', 'a'];
-const NUMBERS: WordNumber[] = ['singular', 'plural'];
-const GENDERS: Noun.Gender[] = ['masculine', 'feminine', 'neuter'];
 
 const COL_WIDTH = 140;
 const COL_WIDTH_SM = 80;
@@ -28,6 +23,7 @@ function FirstAndSecondNouns(
   {
     currentWord,
     onAnswer,
+    params,
   }: GameComponentProps<Noun.Data>,
 ) {
   const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -68,7 +64,7 @@ function FirstAndSecondNouns(
       <Stack direction="row" spacing={2}>
         <Box minWidth={firstColWidth} />
 
-        {GENDERS.map(gender => (
+        {params.gender.map(gender => (
           <Box
             alignItems="center"
             display="flex"
@@ -87,11 +83,11 @@ function FirstAndSecondNouns(
         ))}
       </Stack>
 
-      {NUMBERS.map(number => (
+      {params.number.map(number => (
         <Fragment key={number}>
           <Divider />
 
-          {CASES.map((nounCase, i) => {
+          {params.nounCase.map((nounCase, i) => {
             const numberName = getNumberName(number);
             return (
               <Stack direction="row" spacing={2} key={`${nounCase}${number}`}>
@@ -112,7 +108,7 @@ function FirstAndSecondNouns(
                   )}
                 </Box>
 
-                {GENDERS.map(gender => {
+                {params.gender.map(gender => {
                   const key = `${nounCase}${number}${gender}`;
                   const caseName = getCaseName(nounCase);
                   return (

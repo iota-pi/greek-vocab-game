@@ -10,11 +10,13 @@ import type {
   GameCategory,
   GameComponentProps,
   Parsing,
+  ParsingOptions,
   Report,
   WordWithParsing,
 } from '../../types';
 import StartGameDialog from '../StartGameDialog';
 import GameHeader from '../GameHeader';
+import { gameWordParams } from '.';
 
 function GameBase<T extends BaseData>({
   category,
@@ -118,6 +120,7 @@ function GameBase<T extends BaseData>({
 
             <GameComponent
               currentWord={currentWord}
+              params={gameWordParams[category] as ParsingOptions<T>}
               onAnswer={handleAnswer}
             />
           </>

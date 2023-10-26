@@ -102,6 +102,10 @@ export type WordWithParsing<T extends BaseData> = {
   parsing: Parsing<T>,
 };
 
+export type ParsingOptions<T extends BaseData> = {
+  [K in keyof Parsing<T>]: Parsing<T>[K][];
+};
+
 export type Report<P extends BaseData> = {
   word: string,
   correct: boolean,
@@ -112,4 +116,5 @@ export type Report<P extends BaseData> = {
 export type GameComponentProps<T extends BaseData> = {
   currentWord: WordWithParsing<T>,
   onAnswer: (correct: boolean, chosen: Parsing<T>) => void,
+  params: ParsingOptions<T>,
 };

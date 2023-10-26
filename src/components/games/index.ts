@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import type { BaseData, GameCategory, GameComponentProps, Noun, Parsing, Verb, WordNumber, WordWithParsing } from '../../types';
+import type { BaseData, GameCategory, GameComponentProps, Noun, Parsing, ParsingOptions, Verb, WordNumber, WordWithParsing } from '../../types';
 import nouns from '../../data/nouns';
 import { declineNoun, getGender } from '../../decliner';
 import FirstAndSecondNouns from './FirstAndSecondNouns';
@@ -137,11 +137,48 @@ export type GameData<T extends BaseData> = {
   component: FC<GameComponentProps<T>>,
 };
 
+export const gameWordParams: (
+  Record<GameCategory, ParsingOptions<Noun.Data> | ParsingOptions<Verb.Data>>
+) = {
+  firstAndSecondNouns: {
+    nounCase: ['n', 'g', 'd', 'a'],
+    number: ['singular', 'plural'],
+    gender: ['masculine', 'feminine', 'neuter'],
+  },
+  indicative: {
+    tense: ['present', 'imperfect', 'aorist', 'future'],
+    mood: ['indicative'],
+    voice: ['active'],
+    person: ['first', 'second', 'third'],
+    number: ['singular', 'plural'],
+  },
+  imperative: {
+    // TODO: other tenses?
+    tense: ['present', 'aorist'],
+    mood: ['imperative'],
+    voice: ['active', 'middle'],
+    person: ['second', 'third'],
+    number: ['singular', 'plural'],
+  },
+  infinitive: {
+    // TODO: other tenses?
+    tense: ['present', 'aorist'],
+    mood: ['infinitive'],
+    voice: ['active', 'middle'],
+    person: ['first'],
+    number: ['singular'],
+  },
+  verbs: {
+    tense: ['present'],
+    mood: ['indicative'],
+    voice: ['active'],
+    person: ['first', 'second', 'third'],
+    number: ['singular', 'plural'],
+  },
+};
+
 export const games: (
-  Record<
-  GameCategory,
-  GameData<Noun.Data> | GameData<Verb.Data>
-  >
+  Record<GameCategory, GameData<Noun.Data> | GameData<Verb.Data>>
 ) = {
   firstAndSecondNouns: {
     category: 'firstAndSecondNouns',
@@ -159,8 +196,7 @@ export const games: (
     name: 'Nouns (1st & 2nd Declension)',
     pickWord: getPickNoun({
       noun: nouns,
-      nounCase: ['n', 'g', 'd', 'a'],
-      number: ['singular', 'plural'],
+      ...gameWordParams.firstAndSecondNouns as ParsingOptions<Noun.Data>,
     }),
     questions: 20,
   },
@@ -179,11 +215,7 @@ export const games: (
     name: 'Active Indicative Verbs',
     pickWord: getPickVerb({
       verb: verbs,
-      tense: ['present', 'imperfect', 'aorist', 'future'],
-      mood: ['indicative'],
-      voice: ['active'],
-      person: ['first', 'second', 'third'],
-      number: ['singular', 'plural'],
+      ...gameWordParams.indicative as ParsingOptions<Verb.Data>,
     }),
   },
   imperative: {
@@ -202,12 +234,7 @@ export const games: (
     name: 'Imperative Verbs',
     pickWord: getPickVerb({
       verb: verbs,
-      // TODO: other tenses?
-      tense: ['present', 'aorist'],
-      mood: ['imperative'],
-      voice: ['active', 'middle'],
-      person: ['second', 'third'],
-      number: ['singular', 'plural'],
+      ...gameWordParams.imperative as ParsingOptions<Verb.Data>,
     }),
   },
   infinitive: {
@@ -224,12 +251,7 @@ export const games: (
     name: 'Infinitive Verbs',
     pickWord: getPickVerb({
       verb: verbs,
-      // TODO: other tenses?
-      tense: ['present', 'aorist'],
-      mood: ['infinitive'],
-      voice: ['active', 'middle'],
-      person: ['first'],
-      number: ['singular'],
+      ...gameWordParams.infinitive as ParsingOptions<Verb.Data>,
     }),
   },
   verbs: {
@@ -246,11 +268,7 @@ export const games: (
     name: 'Present Active Indicative Verbs',
     pickWord: getPickVerb({
       verb: verbs,
-      tense: ['present'],
-      mood: ['indicative'],
-      voice: ['active'],
-      person: ['first', 'second', 'third'],
-      number: ['singular', 'plural'],
+      ...gameWordParams.verbs as ParsingOptions<Verb.Data>,
     }),
   },
 };
