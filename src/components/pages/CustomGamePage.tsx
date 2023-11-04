@@ -1,9 +1,8 @@
 import { Noun, Parsing, Report, Verb, WordData, WordWithParsing } from '../../types';
 import { useLocalStorage } from 'usehooks-ts';
-import { ALL_CASES, ALL_GENDERS, ALL_MOODS, ALL_NUMBERS, ALL_PERSONS, ALL_TENSES, ALL_VOICES, StudyCategory, checkParsing, getCaseName, getGenderName, getMoodName, getNumberName, getPersonName, getTenseName, getVoiceName, isNoun, isVerb } from '../../util';
+import { ALL_CASES, ALL_GENDERS, ALL_MOODS, ALL_NUMBERS, ALL_PERSONS, ALL_TENSES, ALL_VOICES, StudyCategory, checkParsing, getCaseName, getGenderName, getMoodName, getNumberName, getPersonName, getPickNoun, getPickVerb, getTenseName, getVoiceName, isNoun, isVerb } from '../../util';
 import { getGeneralFormatter } from '../formatter';
 import { MouseEvent, useCallback, useMemo, useState } from 'react';
-import { getPickNoun, getPickVerb } from '../games';
 import nouns from '../../data/nouns';
 import verbs from '../../data/verbs';
 import { Box, Button, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
