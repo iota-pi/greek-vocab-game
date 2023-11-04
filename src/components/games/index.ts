@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import type { BaseData, GameCategory, GameComponentProps, Noun, Parsing, ParsingOptions, Verb, WordNumber, WordWithParsing } from '../../types';
+import type { WordData, GameCategory, GameComponentProps, Noun, Parsing, ParsingOptions, Verb, WordNumber, WordWithParsing } from '../../types';
 import nouns from '../../data/nouns';
 import { declineNoun, getGender } from '../../decliner';
 import FirstAndSecondNouns from './FirstAndSecondNouns';
@@ -11,22 +11,24 @@ import ImperativeVerbs from './ImperativeVerbs';
 import InfinitiveVerbs from './InfinitiveVerbs';
 import PresentVerbs from './PresentVerbs';
 
-type NounOptions = {
+export type NounOptions = {
   noun: Noun.Data[],
   number: WordNumber[],
   nounCase: Noun.Case[],
 };
 
-type VerbOptions = {
+export type VerbOptions = {
   verb: Verb.Data[],
   number: WordNumber[],
   tense: Verb.Tense[],
   mood: Verb.Mood[],
   voice: Verb.Voice[],
   person: Verb.Person[],
+  nounCase: Noun.Case[],
+  gender: Noun.Gender[],
 };
 
-const getPickNoun = (
+export const getPickNoun = (
   options: NounOptions,
 ) => {
   const maxAttempts = 3;
@@ -70,15 +72,15 @@ const getPickNoun = (
       return result;
     }
     throw new Error(
-      'Could not pick a valid word after 3 attempts'
+      `Could not pick a valid word after ${maxAttempts} attempts`
     );
   };
 }
 
-const getPickVerb = (
+export const getPickVerb = (
   options: VerbOptions,
 ) => {
-  const maxAttempts = 5;
+  const maxAttempts = 10;
   return () => {
     let result: WordWithParsing<Verb.Data> | null = null;
     for (let i = 0; i < maxAttempts; ++i) {
@@ -108,6 +110,8 @@ const getPickVerb = (
               person: params.person,
               tense: params.tense,
               voice: params.voice,
+              nounCase: params.nounCase,
+              gender: params.gender,
             },
           };
           break;
@@ -123,12 +127,12 @@ const getPickVerb = (
       return result;
     }
     throw new Error(
-      'Could not pick a valid word after 3 attempts'
+      `Could not pick a valid word after ${maxAttempts} attempts`
     );
   };
 }
 
-export type GameData<T extends BaseData> = {
+export type GameData<T extends WordData> = {
   category: GameCategory,
   name: string,
   questions?: number,
@@ -151,6 +155,8 @@ export const gameWordParams: (
     voice: ['active'],
     person: ['first', 'second', 'third'],
     number: ['singular', 'plural'],
+    nounCase: [],
+    gender: [],
   },
   imperative: {
     // TODO: other tenses?
@@ -159,6 +165,8 @@ export const gameWordParams: (
     voice: ['active', 'middle'],
     person: ['second', 'third'],
     number: ['singular', 'plural'],
+    nounCase: [],
+    gender: [],
   },
   infinitive: {
     // TODO: other tenses?
@@ -167,6 +175,8 @@ export const gameWordParams: (
     voice: ['active', 'middle'],
     person: ['first'],
     number: ['singular'],
+    nounCase: [],
+    gender: [],
   },
   verbs: {
     tense: ['present'],
@@ -174,6 +184,8 @@ export const gameWordParams: (
     voice: ['active'],
     person: ['first', 'second', 'third'],
     number: ['singular', 'plural'],
+    nounCase: [],
+    gender: [],
   },
 };
 

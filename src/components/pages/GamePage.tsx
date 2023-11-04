@@ -1,9 +1,9 @@
 import GameBase from '../games/GameBase';
 import { GameData } from '../games';
-import { BaseData } from '../../types';
+import { WordData } from '../../types';
 
 
-function GamePage<T extends BaseData>({ game }: { game: GameData<T> }) {
+function GamePage<T extends WordData>({ game }: { game: GameData<T> }) {
   return (
     <GameBase
       category={game.category}

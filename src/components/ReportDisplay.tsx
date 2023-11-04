@@ -6,10 +6,10 @@ import {
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CrossIcon from '@mui/icons-material/Close';
-import { BaseData, Parsing, Report } from '../types';
+import { WordData, Parsing, Report } from '../types';
 
 
-function ReportDisplay<T extends BaseData>(
+function ReportDisplay<T extends WordData>(
   {
     formatter,
     report,
@@ -20,27 +20,36 @@ function ReportDisplay<T extends BaseData>(
 ) {
   return (
     <List dense>
-      {report.map(({ correct, given, expected, word }, i) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <ListItem key={`reportItem-${i}`}>
-          <ListItemIcon>
-            {(
-              correct
-                ? <CheckIcon color="success" />
-                : <CrossIcon color="error" />
-            )}
-          </ListItemIcon>
+      {report.map(({ correct, given, expected, word }, i) => {
+        const expectedString = (
+          Array.isArray(expected)
+            ? expected.map(e => formatter(e)).join(' OR ')
+            : formatter(expected)
+        );
+        const secondaryText = (
+          `${correct ? 'Alternative' : 'Expected'}: ${expectedString}`
+        );
 
-          <ListItemText
-            primary={(
-              `${word} — ${formatter(given)}`
-            )}
-            secondary={correct ? '' : (
-              `Expected: ${formatter(expected)}`
-            )}
-          />
-        </ListItem>
-      ))}
+        return (
+          // eslint-disable-next-line react/no-array-index-key
+          <ListItem key={`reportItem-${i}`}>
+            <ListItemIcon>
+              {(
+                correct
+                  ? <CheckIcon color="success" />
+                  : <CrossIcon color="error" />
+              )}
+            </ListItemIcon>
+
+            <ListItemText
+              primary={(
+                `${word} — ${formatter(given)}`
+              )}
+              secondary={secondaryText}
+            />
+          </ListItem>
+        );
+      })}
     </List>
   );
 }

@@ -10,7 +10,7 @@ import BackIcon from '@mui/icons-material/ChevronLeft';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import type {
-  BaseData,
+  WordData,
   GameCategory,
   Parsing,
   Report,
@@ -22,7 +22,7 @@ import Timer from './Timer';
 
 const DEFAULT_TIME = 1000 * 60 * 60;
 
-function StartGameDialog<T extends BaseData>({
+function StartGameDialog<T extends WordData>({
   category,
   endTime,
   formatter,

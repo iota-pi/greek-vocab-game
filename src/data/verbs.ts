@@ -2,7 +2,7 @@ import type { Verb } from '../types';
 import { applyWeightings } from '../util';
 
 
-const rawVerbs: Verb.Data[] = [
+const rawVerbs: Omit<Verb.Data, 'type'>[] = [
   {
     word: 'εἰμι',
     lexical: 'εἰμι',
@@ -64,6 +64,12 @@ const rawVerbs: Verb.Data[] = [
   {
     word: 'ἐσθιω',
     lexical: 'ἐσθιω',
+    principalParts: {
+      aorist: {
+        stem: 'φαγ',
+        // second aorist endings
+      },
+    },
   },
   {
     word: 'εὑρισκω',
@@ -340,6 +346,7 @@ const rawVerbs: Verb.Data[] = [
   },
 ];
 
-const verbs = applyWeightings(rawVerbs);
+const withTypes: Verb.Data[] = rawVerbs.map(v => ({ type: 'verb', ...v, }));
+const verbs = applyWeightings(withTypes);
 
 export default verbs;

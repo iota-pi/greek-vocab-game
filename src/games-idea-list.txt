@@ -1,0 +1,18 @@
+Games list
+L10 Nouns (1st & 2nd declension)
+L14 Verb "to be" (present)
+L20 Verb "to be" (imperfect)
+Adjectives?
+L18-19 Present verbs
+L20-21 Imperfect verbs
+L23 First Aorist verbs
+L25 Indicative verbs
+L27 Imperative verbs
+L30-34 Middle/passive indicative
+L33 Indicative with Second Aorist
+L38 Liquid verbs
+L39-40 Nouns (3rd declension)
+
+Combined
+Verb parsing (L1-38)
+Noun parsing (L1-40)

@@ -1,7 +1,7 @@
 import { Noun } from '../types';
 import { applyWeightings } from '../util';
 
-const rawNouns: Noun.Data[] = [
+const rawNouns: Omit<Noun.Data, 'type'>[] = [
   {
     lexical: 'ἀγγελος, ου, ὁ',
     word: 'ἀγγελος',
@@ -327,6 +327,7 @@ const rawNouns: Noun.Data[] = [
   },
 ];
 
-const nouns = applyWeightings(rawNouns);
+const withTypes: Noun.Data[] = rawNouns.map(n => ({ type: 'noun', ...n, }));
+const nouns = applyWeightings(withTypes);
 
 export default nouns;

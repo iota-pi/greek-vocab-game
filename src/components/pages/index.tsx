@@ -4,9 +4,13 @@ import MenuPage from './Menu';
 import GamePage from './GamePage';
 import { GameData, games } from '../games';
 import { Noun, Verb } from '../../types';
+import GameCustomisation from './GameCustomisation';
+import CustomGamePage from './CustomGamePage';
 
 export type PageId = (
   | 'menu'
+  | 'customise'
+  | 'practice'
   | 'nouns'
   | 'present-verbs'
   | 'indicative'
@@ -28,6 +32,18 @@ export const functionalPages: Page[] = [
     name: 'Menu',
     page: <MenuPage />,
   },
+  {
+    id: 'customise',
+    path: '/customise',
+    name: 'Customise Study',
+    page: <GameCustomisation />,
+  },
+  {
+    id: 'practice',
+    path: '/practice',
+    name: 'Practice Parsing',
+    page: <CustomGamePage />,
+  }
 ];
 
 export const gamePages: Page[] = [

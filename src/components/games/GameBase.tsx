@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 import type {
-  BaseData,
+  WordData,
   GameCategory,
   GameComponentProps,
   Parsing,
@@ -18,7 +18,7 @@ import StartGameDialog from '../StartGameDialog';
 import GameHeader from '../GameHeader';
 import { gameWordParams } from '.';
 
-function GameBase<T extends BaseData>({
+function GameBase<T extends WordData>({
   category,
   gameComponent: GameComponent,
   formatter,

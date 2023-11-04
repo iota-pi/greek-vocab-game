@@ -22,6 +22,7 @@ export namespace Noun {
     genitive: string,
     article: Article,
     singular?: boolean,
+    type: 'noun',
   };
 }
 
@@ -37,6 +38,8 @@ export namespace Verb {
     tense: Tense,
     mood: Mood,
     voice: Voice,
+    nounCase: Noun.Case,
+    gender: Noun.Gender,
   };
 
   export type Data = BaseData & {
@@ -45,6 +48,7 @@ export namespace Verb {
     preposition?: string,
     principalParts?: PrincipalParts,
     uniqueParadigm?: boolean,
+    type: 'verb',
   };
 
   export type ParadigmPattern = {
@@ -90,30 +94,32 @@ export namespace Verb {
   export type PrincipalPart = keyof PrincipalParts;
 }
 
+export type WordData = Noun.Data | Verb.Data;
+
 export type Article = 'ὁ' | 'ἡ' | 'το';
 export type AdjectiveForm = '2-2-2' | '2-2';
 export type GameCategory = 'firstAndSecondNouns' | 'verbs' | 'indicative' | 'imperative' | 'infinitive';
 
-export type Word<T extends BaseData> = T extends Noun.Data ? Noun.Data : Verb.Data;
-export type Parsing<T extends BaseData> = T extends Noun.Data ? Noun.Parsing : Verb.Parsing;
-export type WordWithParsing<T extends BaseData> = {
+export type Word<T extends WordData> = T extends Noun.Data ? Noun.Data : Verb.Data;
+export type Parsing<T extends WordData> = T extends Noun.Data ? Noun.Parsing : Verb.Parsing;
+export type WordWithParsing<T extends WordData> = {
   word: string,
   data: T,
   parsing: Parsing<T>,
 };
 
-export type ParsingOptions<T extends BaseData> = {
+export type ParsingOptions<T extends WordData> = {
   [K in keyof Parsing<T>]: Parsing<T>[K][];
 };
 
-export type Report<P extends BaseData> = {
+export type Report<P extends WordData> = {
   word: string,
   correct: boolean,
-  expected: Parsing<P>,
+  expected: Parsing<P> | Parsing<P>[],
   given: Parsing<P>,
 };
 
-export type GameComponentProps<T extends BaseData> = {
+export type GameComponentProps<T extends WordData> = {
   currentWord: WordWithParsing<T>,
   onAnswer: (correct: boolean, chosen: Parsing<T>) => void,
   params: ParsingOptions<T>,
