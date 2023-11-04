@@ -17,17 +17,17 @@ export interface Page {
 
 export const pages: Page[] = [
   {
+    id: 'practice',
+    path: '/practice',
+    name: 'Practice Parsing',
+    page: <CustomGamePage />,
+  },
+  {
     id: 'menu',
     path: '/',
     name: 'Menu',
     page: <GameCustomisation />,
   },
-  {
-    id: 'practice',
-    path: '/practice',
-    name: 'Practice Parsing',
-    page: <CustomGamePage />,
-  }
 ];
 
 function PageView() {
