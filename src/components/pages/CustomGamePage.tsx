@@ -1,6 +1,27 @@
 import { Noun, Parsing, Report, Verb, WordData, WordWithParsing } from '../../types';
 import { useLocalStorage } from 'usehooks-ts';
-import { ALL_CASES, ALL_GENDERS, ALL_MOODS, ALL_NUMBERS, ALL_PERSONS, ALL_TENSES, ALL_VOICES, StudyCategory, checkParsing, getCaseName, getGenderName, getMoodName, getNumberName, getPersonName, getPickNoun, getPickVerb, getTenseName, getVoiceName, isNoun, isVerb } from '../../util';
+import {
+  ALL_CASES,
+  ALL_GENDERS,
+  ALL_MOODS,
+  ALL_NUMBERS,
+  ALL_PARTS,
+  ALL_PERSONS,
+  ALL_TENSES,
+  ALL_VOICES,
+  CombinedParsing,
+  PART_MAPPING,
+  ParsingPart,
+  StudyCategory,
+  checkParsing,
+  getPartName,
+  getPickNoun,
+  getPickVerb,
+  getRelevantVerbParts,
+  isNoun,
+  isValidParsing,
+  isVerb,
+} from '../../util';
 import { getGeneralFormatter } from '../formatter';
 import { MouseEvent, useCallback, useMemo, useState } from 'react';
 import nouns from '../../data/nouns';
@@ -8,48 +29,9 @@ import verbs from '../../data/verbs';
 import { Box, Button, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import ReportDisplay from '../ReportDisplay';
 
-export type ParsingPart = keyof Noun.Parsing | keyof Verb.Parsing;
-export type CombinedParsing = {
-  [k in ParsingPart]: (
-    k extends keyof Noun.Parsing
-      ? Noun.Parsing[k]
-      : (k extends keyof Verb.Parsing ? Verb.Parsing[k] : never)
-  );
-}
 export type CombinedParsingWithNulls = {
   [k in ParsingPart]: CombinedParsing[k] | null;
 }
-export const PART_MAPPING: {
-  [k in ParsingPart]: CombinedParsing[k][];
-} = {
-  nounCase: ALL_CASES,
-  gender: ALL_GENDERS,
-  mood: ALL_MOODS,
-  number: ALL_NUMBERS,
-  person: ALL_PERSONS,
-  tense: ALL_TENSES,
-  voice: ALL_VOICES,
-};
-export const PART_NAME_MAPPING: {
-  [k in ParsingPart]: (value: CombinedParsing[k]) => string;
-} = {
-  gender: getGenderName,
-  mood: getMoodName,
-  nounCase: getCaseName,
-  number: getNumberName,
-  person: getPersonName,
-  tense: getTenseName,
-  voice: getVoiceName,
-};
-export const ALL_PARTS: ParsingPart[] = [
-  'tense',
-  'voice',
-  'mood',
-  'person',
-  'number',
-  'gender',
-  'nounCase',
-];
 const BLANK_PARSING: CombinedParsingWithNulls = {
   gender: null,
   mood: null,
@@ -59,42 +41,6 @@ const BLANK_PARSING: CombinedParsingWithNulls = {
   tense: null,
   voice: null,
 };
-
-function getPartName<T extends ParsingPart>(
-  part: T,
-  value: CombinedParsing[T],
-) {
-  return PART_NAME_MAPPING[part](value);
-}
-
-export function isValidParsing(parsing: CombinedParsing) {
-  if (parsing.mood === 'participle') {
-    if (parsing.person !== 'first') {
-      return false;
-    }
-  } else {
-    if (parsing.nounCase !== 'n') {
-      return false;
-    }
-    if (parsing.gender !== 'masculine') {
-      return false;
-    }
-  }
-  if (parsing.mood === 'infinitive') {
-    if (parsing.person !== 'first') {
-      return false;
-    }
-    if (parsing.number !== 'singular') {
-      return false;
-    }
-  }
-  if (parsing.mood === 'imperative') {
-    if (parsing.person === 'first') {
-      return false;
-    }
-  }
-  return true;
-}
 
 function CustomGamePage() {
   const [category] = useLocalStorage<StudyCategory>('study-category', 'noun');
@@ -135,26 +81,13 @@ function CustomGamePage() {
 
   const applicableParts = useMemo(
     (): ParsingPart[] => {
-      if (!currentWord) {
-        return [];
-      }
       if (isNoun(currentWord)) {
         return ['gender', 'nounCase', 'number'];
-      } else if (isVerb(currentWord)) {
-        let parts: ParsingPart[] = ['tense', 'voice', 'mood', 'person', 'number'];
-        if (parsingInfo.mood === 'infinitive') {
-          parts = parts.filter(p => !['person', 'number'].includes(p));
-        }
-        if (parsingInfo.mood === 'participle') {
-          parts.push('nounCase', 'gender');
-          parts = parts.filter(p => p !== 'person');
-        }
-        // TODO: disable first person for imperatives
-        return parts;
       }
-      throw new Error(`Unknown word type ${JSON.stringify(currentWord)}`);
+      // TODO: disable first person for imperatives
+      return getRelevantVerbParts(parsingInfo);
     },
-    [currentWord, parsingInfo],
+    [currentWord.data, parsingInfo],
   );
 
   const handleTogglePart = useCallback(
@@ -226,19 +159,21 @@ function CustomGamePage() {
   const handleClickCheck = useCallback(
     () => {
       const possibleParsings = getAllPossibleParsings();
+      let otherPossibleParsings = possibleParsings;
       let correct = false;
       for (const parsing of possibleParsings) {
         correct = applicableParts.every(
           part => parsingInfo[part] === parsing[part]
         );
         if (correct) {
+          otherPossibleParsings = otherPossibleParsings.filter(p => p !== parsing);
           break;
         }
       }
       const newReport: Report<WordData> = {
         word: currentWord.word,
         correct,
-        expected: possibleParsings,
+        expected: otherPossibleParsings,
         given: (parsingInfo as CombinedParsing),
       };
 

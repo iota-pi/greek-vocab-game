@@ -26,7 +26,7 @@ function ReportDisplay<T extends WordData>(
             ? expected.map(e => formatter(e)).join(' OR ')
             : formatter(expected)
         );
-        const secondaryText = (
+        const secondaryText = expectedString && (
           `${correct ? 'Alternative' : 'Expected'}: ${expectedString}`
         );
 

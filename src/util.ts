@@ -1,6 +1,7 @@
+import { CombinedParsingWithNulls } from './components/pages/CustomGamePage';
 import { conjugateVerb } from './conjugater';
 import { declineNoun, getGender } from './decliner';
-import type { Noun, Parsing, Verb, Word, WordData, WordNumber, WordWithParsing } from './types';
+import type { Noun, Verb, Word, WordData, WordNumber, WordWithParsing } from './types';
 
 export const CATEGORY_MAP = {
   noun: 'Nouns',
@@ -21,6 +22,46 @@ export const ALL_MOODS: Verb.Mood[] = [
 ];
 export const ALL_TENSES: Verb.Tense[] = ['present', 'imperfect', 'aorist', 'future'];
 export const ALL_VOICES: Verb.Voice[] = ['active', 'middle', 'passive'];
+
+export type ParsingPart = keyof Noun.Parsing | keyof Verb.Parsing;
+export type CombinedParsing = {
+  [k in ParsingPart]: (
+    k extends keyof Noun.Parsing
+      ? Noun.Parsing[k]
+      : (k extends keyof Verb.Parsing ? Verb.Parsing[k] : never)
+  );
+}
+export const PART_MAPPING: {
+  [k in ParsingPart]: CombinedParsing[k][];
+} = {
+  nounCase: ALL_CASES,
+  gender: ALL_GENDERS,
+  mood: ALL_MOODS,
+  number: ALL_NUMBERS,
+  person: ALL_PERSONS,
+  tense: ALL_TENSES,
+  voice: ALL_VOICES,
+};
+export const PART_NAME_MAPPING: {
+  [k in ParsingPart]: (value: CombinedParsing[k]) => string;
+} = {
+  gender: getGenderName,
+  mood: getMoodName,
+  nounCase: getCaseName,
+  number: getNumberName,
+  person: getPersonName,
+  tense: getTenseName,
+  voice: getVoiceName,
+};
+export const ALL_PARTS: ParsingPart[] = [
+  'tense',
+  'voice',
+  'mood',
+  'person',
+  'number',
+  'gender',
+  'nounCase',
+];
 
 export const API_ENDPOINT = (
   'https://s46ipfbb5e.execute-api.ap-southeast-2.amazonaws.com/production'
@@ -66,6 +107,13 @@ export function ensureDefined<T>(value: T | undefined): T {
 export function normaliseColumnName(value: string) {
   const name = value.replace(/\s+/g, '');
   return name.toLowerCase();
+}
+
+export function getPartName<T extends ParsingPart>(
+  part: T,
+  value: CombinedParsing[T],
+) {
+  return PART_NAME_MAPPING[part](value);
 }
 
 export function getCaseName(nounCase: Noun.Case) {
@@ -159,6 +207,47 @@ export function formatTime(time: { m: number, ms: number, s: number }) {
 
 export function applyWeightings<T extends { weight?: number }>(data: T[]) {
   return data.flatMap(x => new Array<T>(x.weight ?? 1).fill(x));
+}
+
+export function getRelevantVerbParts(
+  parsing: { [k in keyof Verb.Parsing]: Verb.Parsing[k] | null },
+): ParsingPart[] {
+  let parts: ParsingPart[] = ['tense', 'voice', 'mood'];
+  if (parsing.mood === 'participle') {
+    parts.push('nounCase', 'gender', 'number');
+  } else if (parsing.mood !== 'infinitive') {
+    parts.push('person', 'number');
+  }
+  return parts;
+}
+
+export function isValidParsing(parsing: CombinedParsing) {
+  if (parsing.mood === 'participle') {
+    if (parsing.person !== 'first') {
+      return false;
+    }
+  } else {
+    if (parsing.nounCase !== 'n') {
+      return false;
+    }
+    if (parsing.gender !== 'masculine') {
+      return false;
+    }
+  }
+  if (parsing.mood === 'infinitive') {
+    if (parsing.person !== 'first') {
+      return false;
+    }
+    if (parsing.number !== 'singular') {
+      return false;
+    }
+  }
+  if (parsing.mood === 'imperative') {
+    if (parsing.person === 'first') {
+      return false;
+    }
+  }
+  return true;
 }
 
 export function checkParsing<T extends WordData>(

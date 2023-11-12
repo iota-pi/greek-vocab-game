@@ -85,7 +85,7 @@ const rawVerbs: Omit<Verb.Data, 'type'>[] = [
     lexical: 'ἐχω',
     principalParts: {
       aorist: {
-        stem: 'εσχ',
+        stem: 'ἐσχ',
         noAugment: true,
         noTenseMarker: true,
         endings: {
